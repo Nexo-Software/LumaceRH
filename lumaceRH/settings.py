@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'authentication',
     'empresa',
     'sucursal',
+    'departamento',
 ]
 
 MIDDLEWARE = [
