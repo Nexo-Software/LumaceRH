@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     # Local apps
     'base',
     'authentication',
-    'empresa'
+    'empresa',
+    'sucursal',
 ]
 
 MIDDLEWARE = [
