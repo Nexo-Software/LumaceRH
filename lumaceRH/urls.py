@@ -23,4 +23,5 @@ urlpatterns = [
     # Local apps
     path('', include('base.urls')),
     path('empresa/', include('empresa.urls')),
+    path('sucursal/', include('sucursal.urls')),
 ]
