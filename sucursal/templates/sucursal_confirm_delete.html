@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}
+Sucursales
+{% endblock titulo %}
+{% block contenido %}
+<div class="row mt-3">
+    <div class="col-12">
+        <!-- Detalle de la empresa -->
+        <div class="confirmation-delete">
+            <h1 class="display-3">Confirmar eliminación</h1>
+            <p>¿Estás seguro de que deseas eliminar la sucursal "{{ sucursal.nombre }}"?</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                <a href="{% url 'empresa_list' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -31,8 +31,12 @@ Sucursales
                     </td>
                     <td>{{ sucursal.direccion }}</td>
                     <td>{{ sucursal.telefono }}</td>
-                    <td><a href="" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
+                    <td><a href="{% url 'sucursal_delete' sucursal.id %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
                 </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No hay sucursales registradas</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

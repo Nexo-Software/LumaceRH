@@ -41,3 +41,14 @@ class SucursalDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
     model = SucursalModel
     template_name = 'sucursal_detail.html'
     context_object_name = 'sucursal'
+
+class SucursalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'sucursal.delete_sucursalmodel'
+    model = SucursalModel
+    context_object_name = 'sucursal'
+    template_name = 'sucursal_confirm_delete.html'
+    success_url = reverse_lazy('sucursal_list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Sucursal eliminada correctamente.")
+        return super().delete(request, *args, **kwargs)
