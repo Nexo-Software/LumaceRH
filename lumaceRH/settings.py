@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'empresa',
     'sucursal',
     'departamento',
+    'puesto',
 ]
 
 MIDDLEWARE = [
