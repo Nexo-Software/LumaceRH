@@ -1,14 +1,16 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from formtools.wizard.views import SessionWizardView
 # Vistas basadas en clases
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+# Modelos
+from .models import EmpresaModel
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+# Formularios
+from .forms import EmpresaBasicInfoForm, EmpresaAddressForm, EmpresaContactForm, EmpresaFiscalForm
 # Create your views here.
-
-# Ver lista de empresas
-from .models import EmpresaModel
-from .forms import EmpresaForm
 
 class EmpresaListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'empresa.view_empresamodel'
@@ -22,6 +24,24 @@ class EmpresaDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
     model = EmpresaModel
     template_name = 'empresa_detail.html'
     context_object_name = 'empresa'
+
+class EmpresaWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
+    permission_required = 'empresa.add_empresamodel'
+    template_name = 'empresa_wizard_form.html'
+    form_list = [
+        ('basic', EmpresaBasicInfoForm),
+        ('address', EmpresaAddressForm),
+        ('contact', EmpresaContactForm),
+        ('fiscal', EmpresaFiscalForm),
+    ]
+    
+    def done(self, form_list, **kwargs):
+        form_data = {}
+        for form in form_list:
+            form_data.update(form.cleaned_data)
+        
+        EmpresaModel.objects.create(**form_data)
+        return HttpResponseRedirect(reverse_lazy('empresa_list'))
 
 class EmpresaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'empresa.delete_empresamodel'

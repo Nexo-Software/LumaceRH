@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block titulo %}Registro de Empresa{% endblock %}
+
+{% block contenido %}
+<!-- Título de la página -->
+<h1 class="display-3">
+    {% if wizard.steps.current == 'basic' %}
+        Información Básica
+    {% elif wizard.steps.current == 'address' %}
+        Dirección
+    {% elif wizard.steps.current == 'contact' %}
+        Contacto
+    {% elif wizard.steps.current == 'fiscal' %}
+        Datos Fiscales
+    {% endif %}
+</h1>
+
+<!-- Formularios -->
+<form method="post">
+    {% csrf_token %}
+    {{ wizard.management_form }}
+    
+    {% crispy wizard.form %}
+    
+    <div class="mt-3 d-flex justify-content-between">
+        {% if wizard.steps.prev %}
+            <button name="wizard_goto_step" value="{{ wizard.steps.prev }}" 
+                    class="btn btn-secondary">Anterior</button>
+        {% else %}
+            <button type="button" class="btn btn-secondary" disabled>Anterior</button>
+        {% endif %}
+        
+        {% if wizard.steps.step1 == wizard.steps.count %}
+            <button type="submit" class="btn btn-success">Guardar</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary">Siguiente</button>
+        {% endif %}
+    </div>
+</form>
+
+<!-- Progreso -->
+<div class="progress mt-3">
+    <div class="progress-bar" style="width: {% widthratio wizard.steps.step1 wizard.steps.count 100 %}%">
+        Paso {{ wizard.steps.step1 }} de {{ wizard.steps.count }}
+    </div>
+</div>
+{% endblock %}

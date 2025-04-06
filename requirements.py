@@ -1,9 +1,12 @@
 asgiref==3.8.1
 beautifulsoup4==4.13.3
 cachetools==5.5.2
+crispy-bootstrap5==2025.4
 decorator==5.2.1
 Django==5.2
 django-bootstrap5==25.1
+django-crispy-forms==2.3
+django-formtools==2.5.1
 django-unicorn==0.62.0
 orjson==3.10.16
 shortuuid==1.0.13

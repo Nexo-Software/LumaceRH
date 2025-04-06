@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block titulo %}Acceso Denegado{% endblock %}
+
+{% block contenido %}
+
+<h1 class="display-3">La página que buscaste no existe</h1>
+<p>Lo sentimos, pero no hemos podido encontrar la página que buscaste.</p>
+<p>Es posible que necesites:</p>
+<ul>
+    <li>Verificar la URL que ingresaste</li>
+    <li>Regresar a la página anterior</li>
+    <li>Volver al inicio</li>
+</ul>
+<p>Si crees que esto es un error, por favor contacta a tu administrador.</p>
+<a href="{% url 'dashboard' %}" class="btn btn-primary">Volver al inicio</a>
+{% endblock %}

@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("unicorn/", include("django_unicorn.urls")),
     # Local apps
+    path('', include('base.urls')),
     path('empresa/', include('empresa.urls')),
 ]

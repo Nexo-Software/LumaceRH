@@ -8,7 +8,9 @@ Empresas
     <div class="col-12">
         <!-- Mostrar las empresas registradas -->
         <table class="table table-hover table-striped table-bordered text-center">
-            <caption>Lista de empresas registradas</caption>
+            <caption>
+                <a href="{% url 'empresa_create' %}" class="btn btn-primary mb-2"><i class="fa-solid fa-plus"></i> Nueva empresa</a>
+            </caption>
             <thead>
                 <tr>
                     <th scope="col">Razon social</th>

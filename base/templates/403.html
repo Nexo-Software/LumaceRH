@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block titulo %}Acceso Denegado{% endblock %}
+
+{% block contenido %}
+
+<h1 class="display-3">Acceso Denegado</h2>
+<p>Lo sentimos, pero no tienes permisos para acceder a esta página.</p>
+<p>Es posible que necesites:</p>
+<ul>
+    <li>Solicitar acceso a tu administrador</li>
+    <li>Iniciar sesión con una cuenta diferente</li>
+</ul>
+
+<a href="{% url 'dashboard' %}" class="btn btn-primary">Volver al inicio</a>
+{% endblock %}
