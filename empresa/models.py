@@ -15,6 +15,7 @@ class EmpresaModel(BaseModel):
     @property
     def direccion(self):
         return f'{self.calle} # {self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
+    direccion.fget.short_description = 'Dirección'
     # Datos de Contacto
     telefono = models.CharField(max_length=20, verbose_name='Teléfono', null=True, blank=True, help_text='Teléfono de la empresa')
     fax = models.CharField(max_length=20, verbose_name='Fax', null=True, blank=True, help_text='Fax de la empresa')

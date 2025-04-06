@@ -1,0 +1,13 @@
+asgiref==3.8.1
+beautifulsoup4==4.13.3
+cachetools==5.5.2
+decorator==5.2.1
+Django==5.2
+django-bootstrap5==25.1
+django-unicorn==0.62.0
+orjson==3.10.16
+shortuuid==1.0.13
+soupsieve==2.6
+sqlparse==0.5.3
+typing_extensions==4.13.1
+tzdata==2025.2
