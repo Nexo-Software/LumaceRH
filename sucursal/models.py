@@ -1,6 +1,7 @@
 from django.db import models
 from empresa.models import EmpresaModel
 from base.models import BaseModel
+from django.contrib.auth.models import User
 # Create your models here.
 
 class SucursalModel(BaseModel):
@@ -23,6 +24,8 @@ class SucursalModel(BaseModel):
     fax = models.CharField(max_length=20, verbose_name='Fax', null=True, blank=True, help_text='Fax de la empresa')
     email = models.EmailField(max_length=255, verbose_name='Email', null=True, blank=True, help_text='Email de la empresa')
     web = models.URLField(max_length=255, verbose_name='Web', null=True, blank=True, help_text='Página web de la empresa')
+    # Encargado de la sucursal
+    encargado = models.ForeignKey(User, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_encargado', verbose_name='Encargado', null=True, blank=True, help_text='Encargado de la sucursal')
     # Métodos
     def __str__(self):
         return self.nombre
