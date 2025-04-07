@@ -39,7 +39,9 @@ class EmpresaWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiza
         form_data = {}
         for form in form_list:
             form_data.update(form.cleaned_data)
-        
+        # Añadir los campos created_by y updated_by al diccionario form_data
+        form_data['created_by'] = self.request.user
+        form_data['updated_by'] = self.request.user
         EmpresaModel.objects.create(**form_data)
         return HttpResponseRedirect(reverse_lazy('empresa_list'))
 

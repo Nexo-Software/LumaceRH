@@ -24,6 +24,11 @@ class DepartamentoCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
     form_class = DepartamentoForm
     template_name = 'departamento_form.html'
     success_url = reverse_lazy('departamento_list')
+    def form_valid(self, form):
+        # Asignar el usuario antes de guardar
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
 
 class DepartamentoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     permission_required = 'departamento.view_departamentomodel'

@@ -32,7 +32,8 @@ class SucursalWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         form_data = {}
         for form in form_list:
             form_data.update(form.cleaned_data)
-        
+        form_data['created_by'] = self.request.user
+        form_data['updated_by'] = self.request.user
         SucursalModel.objects.create(**form_data)
         return HttpResponseRedirect(reverse_lazy('sucursal_list'))
 

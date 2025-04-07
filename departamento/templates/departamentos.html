@@ -15,6 +15,7 @@ Departamentos
             </caption>
             <thead>
                 <tr>
+                    <th scope="col">Empresa</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Encargado</th>
                     <th scope="col"></th>
@@ -23,6 +24,9 @@ Departamentos
             <tbody>
                 {% for departamento in departamentos %}
                 <tr class="align-middle">
+                    <td>
+                        {{ departamento.empresa.razon_social }}
+                    </td>
                     <td>
                         <a href="{% url 'departamento_detail' departamento.id %}">{{ departamento.nombre }}</a>
                     </td>
