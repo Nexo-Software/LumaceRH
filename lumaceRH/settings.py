@@ -37,14 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Django Extensions
     'django_bootstrap5',
     'django_unicorn',
     'crispy_forms',
     'crispy_bootstrap5',
     'formtools',
+    # Allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     # Local apps
     'base',
-    'authentication',
     'empresa',
     'sucursal',
     'departamento',
@@ -59,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Allauth middleware
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'lumaceRH.urls'
@@ -145,3 +151,14 @@ MESSAGE_TAGS = {
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Allauth settings
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    #'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+SOCIALACCOUNT_PROVIDERS = {}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -20,6 +20,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("unicorn/", include("django_unicorn.urls")),
+    # allauth
+    path('accounts/', include('allauth.urls')),
     # Local apps
     path('', include('base.urls')),
     path('empresa/', include('empresa.urls')),
