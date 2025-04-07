@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block titulo %}
+Nuevo departamento
+{% endblock titulo %}
+
+{% block contenido %}
+<h1 class="display-3">
+    Nuevo departamento
+</h1>
+<div class="row">
+    <div class="col-12">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {{ form|crispy }}
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'departamento_list' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar Departamento</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenido %}
