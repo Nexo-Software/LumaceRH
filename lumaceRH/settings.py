@@ -57,6 +57,10 @@ INSTALLED_APPS = [
     'puesto',
     'contrato', # Pendiente
     'empleado'
+    'incidencia',
+    'nomina',
+    'horario',
+    'vacaciones'
 ]
 
 MIDDLEWARE = [
