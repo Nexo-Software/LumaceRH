@@ -9,6 +9,7 @@ from .models import PuestoModel
 from .forms import PuestoForm
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 # Create your views here.
 
 class PuestoListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
