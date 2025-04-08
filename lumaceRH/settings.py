@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'departamento',
     'puesto',
     'contrato', # Pendiente
-    'empleado'
+    'empleado',
     'incidencia',
     'nomina',
     'horario',
