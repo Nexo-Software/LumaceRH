@@ -18,6 +18,7 @@ class EmpresaListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'empresas.html'
     context_object_name = 'empresas'
     paginate_by = 10
+    ordering = ['razon_social', 'created_at']
 
 class EmpresaDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     permission_required = 'empresa.view_empresamodel'

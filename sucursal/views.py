@@ -18,6 +18,7 @@ class SucursalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'sucursales.html'
     context_object_name = 'sucursales'
     paginate_by = 10
+    ordering = ['nombre', 'created_at']
 
 class SucursalWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
     permission_required = 'sucursal.add_sucursalmodel'

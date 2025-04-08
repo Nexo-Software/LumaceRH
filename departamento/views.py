@@ -17,6 +17,7 @@ class DepartamentoListView(LoginRequiredMixin, PermissionRequiredMixin, ListView
     template_name = 'departamentos.html'
     context_object_name = 'departamentos'
     paginate_by = 10
+    ordering = ['nombre', 'created_at']
 
 class DepartamentoCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'departamento.add_departamentomodel'

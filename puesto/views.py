@@ -17,6 +17,7 @@ class PuestoListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'puestos.html'
     context_object_name = 'puestos'
     paginate_by = 10
+    ordering = ['nombre', 'created_at']
 
 class PuestoCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'puesto.add_puestomodel'    
