@@ -7,6 +7,7 @@ class ContratoBasicForm(forms.ModelForm):
     class Meta:
         model = ContratoModel
         fields = [
+            'nombre',
             'tipo_contrato',
             'horas_trabajo',
         ]
@@ -34,6 +35,11 @@ class ContratoDateForm(forms.ModelForm):
             'fecha_inicio',
             'fecha_fin',
         ]
+        # Formato de fecha
+        widgets = {
+            'fecha_inicio': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_fin': forms.DateInput(attrs={'type': 'date'}),
+        }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

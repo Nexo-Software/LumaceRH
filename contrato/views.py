@@ -2,7 +2,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 # Vistas
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
 # Formularios
 from .forms import ContratoBasicForm, ContratoSalaryForm, ContratoDateForm
@@ -36,3 +36,16 @@ class ContratoSessionWizarView(LoginRequiredMixin, PermissionRequiredMixin, Sess
         form_data['updated_by'] = self.request.user
         ContratoModel.objects.create(**form_data)
         return HttpResponseRedirect(reverse_lazy('contrato_list'))
+
+class ContratoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = ContratoModel # Modelo a utilizar
+    template_name = 'contrato_detail.html' # Plantilla a utilizar
+    context_object_name = 'contrato'
+    permission_required = 'contrato.view_contrato'
+
+class ContratoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = ContratoModel # Modelo a utilizar
+    template_name = 'contrato_confirm_delete.html' # Plantilla a utilizar
+    context_object_name = 'contrato'
+    success_url = reverse_lazy('contrato_list') # URL a redirigir después de eliminar el objeto
+    permission_required = 'contrato.delete_contrato'

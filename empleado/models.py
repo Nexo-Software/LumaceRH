@@ -6,6 +6,8 @@ from contrato.models import ContratoModel
 from ckeditor.fields import RichTextField
 # Create your models here.
 
+
+# Modelo para el postulante
 class PostulanteModel(BaseModel):
     # {nombre, apellido, correo, usuario}
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_usuario', null=False, blank=False)

@@ -7,4 +7,46 @@ Lista de Contratos
 <h1 class="display-3">
     Contratos
 </h1>
+<!-- Tabla de contratos -->
+<div class="row">
+    <div class="col-12">
+        <table class="table table-striped table-hover table-bordered text-center">
+            <caption>
+                <a href="{% url 'contrato_create' %}" class="btn btn-primary mb-2"><i class="fa-solid fa-plus"></i> Nuevo Contrato</a>
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Tipo contrato</th>
+                    <th scope="col">Salario</th>
+                    <th scope="col">Fecha de Inicio</th>
+                    <th scope="col">Fecha de Fin</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contrato in contratos %}
+                <tr class="align-middle">
+                    <td>
+                        <a href="{% url 'contrato_detail' contrato.pk %}">{{ contrato.nombre }}</a>
+                    </td>
+                    <td>
+                        {{ contrato.tipo_contrato }}
+                    </td>
+                    <td>{{ contrato.salario_base }}</td>
+                    <td>{{ contrato.fecha_inicio }}</td>
+                    <td>{{ contrato.fecha_fin }}</td>
+                    <td>
+                        <a href="{% url 'contrato_delete' contrato.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No hay contratos disponibles.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock contenido %}

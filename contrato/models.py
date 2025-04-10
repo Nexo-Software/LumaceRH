@@ -12,13 +12,14 @@ TIPO_CONTRATO = {
 FRECUENCIA_PAGO = {
     ('D', 'Diario'),
     ('S', 'Semanal'),
-    ('B', 'Quincenal'),
+    ('Q', 'Quincenal'),
     ('M', 'Mensual'),
     ('A', 'Anual'),
 }
 
 class ContratoModel(BaseModel):
     # Información básica
+    nombre = models.CharField(max_length=100, null=True, blank=True)
     tipo_contrato = models.CharField(max_length=1, choices=TIPO_CONTRATO, null=False, blank=False)
     horas_trabajo = models.IntegerField(null=False, blank=False)
     # Información de salario
