@@ -1,23 +1,23 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
-
-{% block titulo %}Registro de Empresa{% endblock %}
+{% block titulo %}
+Formulario Postulante
+{% endblock titulo %}
 
 {% block contenido %}
 <!-- Título de la página -->
 <h1 class="display-3">
-    {% if wizard.steps.current == 'basic' %}
+    {% if wizard.steps.current == 'info' %}
         Información Básica
-    {% elif wizard.steps.current == 'address' %}
+    {% elif wizard.steps.current == 'direccion' %}
         Dirección
-    {% elif wizard.steps.current == 'contact' %}
-        Contacto
-    {% elif wizard.steps.current == 'fiscal' %}
-        Datos Fiscales
+    {% elif wizard.steps.current == 'puesto' %}
+        Puesto y Contrato
+    {% elif wizard.steps.current == 'notas' %}
+        Notas
     {% endif %}
 </h1>
 
-<!-- Formularios -->
 <form method="post">
     {% csrf_token %}
     {{ wizard.management_form }}
@@ -46,4 +46,5 @@
         Paso {{ wizard.steps.step1 }} de {{ wizard.steps.count }}
     </div>
 </div>
-{% endblock %}
+
+{% endblock contenido %}

@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import PostulanteListView, PostulanteCreateView
+from .views import PostulanteListView, PostulanteWizardView
 
 urlpatterns = [
     path('', PostulanteListView.as_view(), name='postulante_list'),  # Listar postulantes
-    path('create/', PostulanteCreateView.as_view(), name='postulante_create'),
+    path('create/', PostulanteWizardView.as_view(), name='postulante_create'),
 
 ]

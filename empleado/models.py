@@ -11,6 +11,17 @@ from ckeditor.fields import RichTextField
 class PostulanteModel(BaseModel):
     # {nombre, apellido, correo, usuario}
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_usuario', null=False, blank=False)
+    # Direccion
+    calle = models.CharField(max_length=255, verbose_name='Calle', null=True, blank=True)
+    numero = models.CharField(max_length=10, verbose_name='Número', null=True, blank=True)
+    ciudad = models.CharField(max_length=255, verbose_name='Ciudad', null=True, blank=True)
+    codigo_postal = models.CharField(max_length=10, verbose_name='Código Postal', null=True, blank=True)
+    provincia = models.CharField(max_length=255, verbose_name='Provincia', null=True, blank=True)
+    pais = models.CharField(max_length=255, verbose_name='País', null=True, blank=True)
+    @property
+    def direccion(self):
+        return f'{self.calle} # {self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
+    direccion.fget.short_description = 'Dirección'
     # Datos de puesto
     puesto = models.ForeignKey(PuestoModel, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)
     # Datos de contrato

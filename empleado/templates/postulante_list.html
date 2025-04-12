@@ -7,4 +7,38 @@ Postulantes
 <h1 class="display-3">
     Postulantes
 </h1>
+<div class="row">
+    <div class="co-12">
+        <table class="table table-hover table-striped table-bordered text-center">
+            <caption>
+                <a href="{% url 'postulante_create' %}" class="btn btn-primary mb-2">
+                    <i class="fa-solid fa-plus"></i> Nuevo Postulante
+                </a>
+            </caption>
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Puesto</th>
+                    <th scope="col">Contrato</th>
+                    <th scope="col">Dirección</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for postulante in postulantes %}
+                <tr class="align-middle">
+                    <td>
+                        {{ postulante.usuario.first_name }} {{ postulante.usuario.last_name }}
+                    </td>
+                    <td>{{ postulante.usuario.email }}</td>
+                    <td>{{ postulante.puesto }}</td>
+                    <td>{{ postulante.contrato }}</td>
+                    <td>{{ postulante.direccion }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</div>
 {% endblock contenido %}

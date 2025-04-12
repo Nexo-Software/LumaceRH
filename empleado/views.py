@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from formtools.wizard.views import SessionWizardView
 # Formularios
-from .forms import PostulanteForm
+from .forms import PostulanteInfoForm, PostulanteDireccionForm, PostulantePuestoForm, PostulanteNotasForm
 # Modelos
 from .models import PostulanteModel
 # Mixins
@@ -17,14 +17,22 @@ class PostulanteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     context_object_name = 'postulantes'
     permission_required = 'empleado.view_postulante'
 
-class PostulanteCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    model = PostulanteModel # Modelo a utilizar
+class PostulanteWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
     permission_required = 'empleado.add_postulante'
-    template_name = 'postulante_form.html' # Plantilla a utilizar
-    form_class = PostulanteForm # Formulario a utilizar
-    success_url = reverse_lazy('postulante_list') # URL a redirigir al crear el objeto
-    def form_valid(self, form):
-        # Asignar el usuario antes de guardar
-        form.instance.created_by = self.request.user
-        form.instance.updated_by = self.request.user
-        return super().form_valid(form)
+    template_name = 'postulante_wizard_form.html'
+    form_list = [
+        ('info', PostulanteInfoForm),
+        ('direccion', PostulanteDireccionForm),
+        ('puesto', PostulantePuestoForm),
+        ('notas', PostulanteNotasForm),
+    ]
+    
+    def done(self, form_list, **kwargs):
+        form_data = {}
+        for form in form_list:
+            form_data.update(form.cleaned_data)
+        # Añadir los campos created_by y updated_by al diccionario form_data
+        form_data['created_by'] = self.request.user
+        form_data['updated_by'] = self.request.user
+        PostulanteModel.objects.create(**form_data)
+        return HttpResponseRedirect(reverse_lazy('postulante_list'))

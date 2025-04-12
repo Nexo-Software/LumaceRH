@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'formtools',
     'ckeditor',
     'django_ckeditor_5',
+    'django_select2',
     # Allauth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    
     # Local apps
     'base',
     'empresa',
