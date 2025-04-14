@@ -44,8 +44,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'formtools',
     'ckeditor',
-    'django_ckeditor_5',
-    'django_select2',
     # Allauth
     'allauth',
     'allauth.account',
@@ -172,3 +170,20 @@ AUTHENTICATION_BACKENDS = [
 SOCIALACCOUNT_PROVIDERS = {}
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Configuración de caché para Select2 (recomendado para producción)
+CACHES = {
+    # ... tus configuraciones de caché existentes
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    },
+    "select2": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "select2",
+        "TIMEOUT": 86400,  # 1 día
+    }
+}
+
+# Configuración de Select2
+SELECT2_CACHE_BACKEND = "select2"

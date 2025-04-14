@@ -3,8 +3,9 @@ from .models import PostulanteModel
 from crispy_forms.helper import FormHelper
 from django_select2 import forms as s2forms
 
-class BuscadorUsuarioForm(s2forms.ModelSelect2Widget):
+class AuthorWidget(s2forms.ModelSelect2Widget):
     search_fields = [
+        "username__icontains",
         "email__icontains",
     ]
 
@@ -16,7 +17,7 @@ class PostulanteInfoForm(forms.ModelForm):
             'usuario',
         ]
         widgets = {
-            'usuario': BuscadorUsuarioForm
+            'usuario': AuthorWidget()
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
