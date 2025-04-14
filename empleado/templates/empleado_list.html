@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 {% block titulo %}
-Postulantes
+Empleados
 {% endblock titulo %}
-
 {% block contenido %}
 <h1 class="display-3">
-    Postulantes
+    Empleados
 </h1>
 <div class="row">
-    <div class="co-12">
+    <div class="col-12">
         <table class="table table-hover table-striped table-bordered text-center">
             <caption>
-                <a href="{% url 'nuevo_usuario' %}" class="btn btn-primary mb-2">
-                    <i class="fa-solid fa-plus"></i> Nuevo Postulante
+                <a href="{% url 'empleado_create' %}" class="btn btn-primary mb-2">
+                    <i class="fa-solid fa-plus"></i> Nuevo Empleado
                 </a>
             </caption>
             <thead class="thead-dark">
@@ -25,15 +24,15 @@ Postulantes
                 </tr>
             </thead>
             <tbody>
-                {% for postulante in postulantes %}
+                {% for empleado in empleados %}
                 <tr class="align-middle">
                     <td>
-                        {{ postulante.usuario.first_name }} {{ postulante.usuario.last_name }}
+                        {{ empleado.postulante.usuario.first_name }} {{ empleado.postulante.usuario.last_name }}
                     </td>
-                    <td>{{ postulante.usuario.email }}</td>
-                    <td>{{ postulante.puesto }}</td>
-                    <td>{{ postulante.contrato }}</td>
-                    <td>{{ postulante.direccion }}</td>
+                    <td>{{ empleado.postulante.usuario.email }}</td>
+                    <td>{{ empleado.puesto }}</td>
+                    <td>{{ empleado.contrato }}</td>
+                    <td>{{ empleado.postulante.direccion }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

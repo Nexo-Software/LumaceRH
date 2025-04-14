@@ -5,9 +5,10 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
 # Formularios
-from .forms import PostulanteInfoForm, PostulanteDireccionForm, PostulantePuestoForm, PostulanteNotasForm
+from .forms import PostulanteInfoForm, PostulanteDireccionForm, PostulantePuestoForm, PostulanteNotasForm, RegistroUsuarioForm, EmpleadoForm, EmpleadoPuestoForm, EmpleadoNotasForm
 # Modelos
-from .models import PostulanteModel
+from .models import PostulanteModel, EmpleadoModel
+from django.contrib.auth.models import User
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -16,6 +17,37 @@ class PostulanteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'postulante_list.html' # Plantilla a utilizar
     context_object_name = 'postulantes'
     permission_required = 'empleado.view_postulante'
+    # Modificar el query para que solo mueste a los que estan como pendientes
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(estado='P')
+
+class NuevoUsuarioView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = User # Modelo a utilizar
+    form_class = RegistroUsuarioForm # Formulario a utilizar
+    template_name = 'nuevo_usuario.html' # Plantilla a utilizar
+    success_url = reverse_lazy('postulante_create') # URL de redirección al crear el usuario
+    permission_required = 'user.add_postulante'
+
+    def form_valid(self, form):
+        # Crear un username
+        username = form.cleaned_data['first_name'] + form.cleaned_data['last_name']
+        # Limpiar el username
+        username = username.replace(" ", "_")
+        # Comprobar si el username ya existe
+        if User.objects.filter(username=username).exists():
+            # Si existe, añadir un número al final
+            i = 1
+            while User.objects.filter(username=username + str(i)).exists():
+                i += 1
+            username = username + str(i)
+        form.instance.username = username.lower()
+        
+        # Guardar el usuario
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        return super().form_valid(form)
 
 class PostulanteWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
     permission_required = 'empleado.add_postulante'
@@ -42,3 +74,34 @@ class PostulanteDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailVi
     template_name = 'postulante_detail.html' # Plantilla a utilizar
     context_object_name = 'postulante'
     permission_required = 'empleado.view_postulante'
+
+# Vistas para empleado
+class EmpleadoListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = EmpleadoModel # Modelo a utilizar
+    template_name = 'empleado_list.html' # Plantilla a utilizar
+    context_object_name = 'empleados'
+    permission_required = 'empleado.view_empleado'
+
+class EmpleadoWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
+    permission_required = 'empleado.add_empleado'
+    template_name = 'empleado_wizard_form.html'
+    form_list = [
+        ('info', EmpleadoForm),
+        ('puesto', EmpleadoPuestoForm),
+        ('notas', EmpleadoNotasForm),
+    ]
+    
+    def done(self, form_list, **kwargs):
+        form_data = {}
+        for form in form_list:
+            form_data.update(form.cleaned_data)
+        # Añadir los campos created_by y updated_by al diccionario form_data
+        form_data['created_by'] = self.request.user
+        form_data['updated_by'] = self.request.user
+        EmpleadoModel.objects.create(**form_data)
+        # Hacer que el postulante pase a empleado
+        postulante = form_data['postulante']
+        postulante.estado = 'A'
+        postulante.save()
+        # Redirigir a la lista de empleados
+        return HttpResponseRedirect(reverse_lazy('empleado_list'))

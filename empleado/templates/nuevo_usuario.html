@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block titulo %}
+Nuevo Usuario
+{% endblock titulo %}
+
+{% block contenido %}
+<h1 class="display-3">
+    Información Básica
+</h1>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Guardar</button>
+</form>
+{% endblock contenido %}
