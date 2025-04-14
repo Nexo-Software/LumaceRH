@@ -2,7 +2,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 # Vistas
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
 # Formularios
 from .forms import PostulanteInfoForm, PostulanteDireccionForm, PostulantePuestoForm, PostulanteNotasForm
@@ -36,3 +36,9 @@ class PostulanteWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionW
         form_data['updated_by'] = self.request.user
         PostulanteModel.objects.create(**form_data)
         return HttpResponseRedirect(reverse_lazy('postulante_list'))
+
+class PostulanteDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = PostulanteModel # Modelo a utilizar
+    template_name = 'postulante_detail.html' # Plantilla a utilizar
+    context_object_name = 'postulante'
+    permission_required = 'empleado.view_postulante'
