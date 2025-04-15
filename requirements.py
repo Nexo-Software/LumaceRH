@@ -15,6 +15,7 @@ django-ckeditor==6.7.2
 django-crispy-forms==2.3
 django-formtools==2.5.1
 django-js-asset==3.1.2
+django-unfold==0.55.2
 django-unicorn==0.62.0
 idna==3.10
 oauthlib==3.2.2

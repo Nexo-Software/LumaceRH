@@ -54,3 +54,11 @@ class EmpleadoModel(BaseModel):
     sucursal = models.ForeignKey('sucursal.SucursalModel', on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_sucursal', null=True, blank=True)
     # Notas
     notas = RichTextField(null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.postulante.usuario.username} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
+    class Meta:
+        db_table = 'empleados'
+        managed = True
+        verbose_name = 'Empleado'
+        verbose_name_plural = 'Empleados'
