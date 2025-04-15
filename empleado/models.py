@@ -41,7 +41,7 @@ class PostulanteModel(BaseModel):
     class Meta:
         verbose_name = "Postulante"
         verbose_name_plural = "Postulantes"
-        db_table = "empleado_postulante"
+        db_table = "postulantes"
 
 class EmpleadoModel(BaseModel):
     # {nombre, apellido, correo, usuario}
