@@ -3,6 +3,10 @@ from base.models import BaseModel
 from empresa.models import EmpresaModel
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from empleado.models import EmpleadoModel
+from puesto.models import PuestoModel
+from ckeditor.fields import RichTextField
 # Create your models here.
 class CategoriaIncidenciasModel(BaseModel):
     """
@@ -256,3 +260,285 @@ class TipoIncidenciaModel(BaseModel):
             raise ValidationError(
                 {'metodo_calculo': 'Las incidencias de tipo percepción o deducción requieren un método de cálculo'}
             )
+
+class IncidenciasEmpleadoModel(BaseModel):
+    """
+    Modelo que registra las incidencias aplicadas a los empleados
+    """
+    # Estados de la incidencia
+    STATUS_CHOICES = [
+        ('PE', 'Pendiente'),
+        ('AP', 'Aprobada'),
+        ('RE', 'Rechazada'),
+        ('CA', 'Cancelada'),
+        ('PR', 'Procesada'),
+    ]
+    
+    # Relaciones principales
+    empleado = models.ForeignKey(
+        EmpleadoModel,
+        on_delete=models.PROTECT,
+        related_name="incidentes",
+        verbose_name="Empleado"
+    )
+    tipo_incidencia = models.ForeignKey(
+        TipoIncidenciaModel,
+        on_delete=models.PROTECT,
+        related_name="incidentes_empleado",
+        verbose_name="Tipo de incidencia"
+    )
+    
+    # Para incidencias que implican otro puesto (ej: encargados temporales)
+    puesto_objetivo = models.ForeignKey(
+        PuestoModel,
+        on_delete=models.PROTECT,
+        related_name="asignaciones_temporales",
+        verbose_name="Puesto objetivo",
+        null=True,
+        blank=True,
+        help_text="Para incidencias que implican cambio temporal de puesto"
+    )
+    
+    # Fechas y duración
+    incident_date = models.DateField(verbose_name="Fecha de incidencia")
+    start_date = models.DateField(verbose_name="Fecha de inicio")
+    end_date = models.DateField(verbose_name="Fecha de fin", null=True, blank=True)
+    
+    # Para incidencias por hora
+    hours = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        verbose_name="Horas",
+        help_text="Número de horas para incidencias por tiempo"
+    )
+    
+    # Detalles
+    details = RichTextField(verbose_name="Detalles", null=True, blank=True)
+    amount = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        verbose_name="Monto",
+        null=True,
+        blank=True,
+        help_text="Monto calculado o manual de la incidencia"
+    )
+    
+    # Estado y seguimiento
+    status = models.CharField(
+        max_length=2,
+        choices=STATUS_CHOICES,
+        default='PE',
+        verbose_name="Estado"
+    )
+    parent_incident = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        related_name="generated_incidents",
+        verbose_name="Incidencia origen",
+        null=True,
+        blank=True,
+        help_text="Para incidencias generadas automáticamente por acumulación"
+    )
+    is_generated = models.BooleanField(
+        default=False,
+        verbose_name="Generada automáticamente",
+        help_text="Indica si esta incidencia fue generada automáticamente por acumulación"
+    )
+    
+    # Aprobación
+    approval_date = models.DateTimeField(verbose_name="Fecha de aprobación", null=True, blank=True)
+    approved_by = models.ForeignKey(
+        'auth.User',
+        on_delete=models.PROTECT,
+        related_name="approved_incidents",
+        verbose_name="Aprobado por",
+        null=True,
+        blank=True
+    )
+    
+    # Documentación
+    document = models.FileField(
+        upload_to='incident_documents/',
+        verbose_name="Documento de soporte",
+        null=True,
+        blank=True
+    )
+    
+    # Procesamiento de nómina
+    processed_in_payroll = models.BooleanField(
+        default=False,
+        verbose_name="Procesado en nómina"
+    )
+    payroll_period = models.CharField(
+        max_length=20,
+        verbose_name="Periodo de nómina",
+        null=True,
+        blank=True
+    )
+    
+    class Meta:
+        verbose_name = "Incidencia de empleado"
+        verbose_name_plural = "Incidencias de empleados"
+        db_table = "employee_incidents"
+    
+    def __str__(self):
+        return f"{self.employee.full_name} - {self.incident_type.name} - {self.incident_date}"
+    
+    @property
+    def duration_days(self):
+        """Calcula la duración en días de la incidencia"""
+        if not self.end_date or self.end_date == self.start_date:
+            return 1
+        return (self.end_date - self.start_date).days + 1
+    
+    @property
+    def is_active(self):
+        """Determina si la incidencia está activa en la fecha actual"""
+        today = timezone.now().date()
+        if self.status not in ['AP', 'PR']:
+            return False
+        if today < self.start_date:
+            return False
+        if self.end_date and today > self.end_date:
+            return False
+        return True
+    
+    def calculate_amount(self):
+        """Calcula el monto de la incidencia según su tipo y método de cálculo"""
+        if not hasattr(self, 'incident_type') or not self.incident_type:
+            return None
+            
+        # Si no tiene efecto económico, no hay monto
+        if self.incident_type.category.effect == 'NONE':
+            return None
+            
+        # Si no tiene método de cálculo, no podemos calcular
+        if not self.incident_type.calculation_method:
+            return None
+            
+        # Obtenemos el salario base del empleado (asumiendo que existe un campo daily_salary)
+        base_salary = getattr(self.employee, 'daily_salary', 0)
+        if not base_salary and hasattr(self.employee, 'current_contract'):
+            # Intentamos obtenerlo del contrato
+            if self.employee.current_contract and hasattr(self.employee.current_contract, 'salary'):
+                if self.employee.current_contract.salary_frequency == 'D':  # Diario
+                    base_salary = self.employee.current_contract.salary
+                elif self.employee.current_contract.salary_frequency == 'M':  # Mensual
+                    base_salary = self.employee.current_contract.salary / 30  # Aproximación
+                # Agregar otros casos según sea necesario
+        
+        # Calculamos el monto
+        return self.incident_type.calculation_method.calculate(
+            base_salary=base_salary,
+            days=self.duration_days,
+            hours=self.hours or 0,
+            target_position=self.target_position
+        )
+    
+    def save(self, *args, **kwargs):
+        # Establecer fecha de fin igual a inicio si no se especifica
+        if not self.end_date:
+            self.end_date = self.start_date
+            
+        # Calcular monto automáticamente si no se especifica y es calculable
+        if self.amount is None and self.incident_type and self.incident_type.category.effect in ['ADD', 'SUB']:
+            self.amount = self.calculate_amount()
+            
+        # Guardar el objeto
+        super().save(*args, **kwargs)
+        
+        # Si es acumulativa, verificar si debe generar otra incidencia
+        if (self.status == 'AP' and self.incident_type and self.incident_type.is_cumulative 
+                and self.incident_type.cumulative_effect_type):
+            self._check_cumulative_effect()
+    
+    def _check_cumulative_effect(self):
+        """Verifica si debe generarse una incidencia por acumulación"""
+        # Obtener el tipo de incidencia y contador acumulativo
+        incident_type = self.incident_type
+        cumulative_count = incident_type.cumulative_count
+        
+        # Determinar el período de búsqueda según el período de reinicio
+        start_date = None
+        today = timezone.now().date()
+        
+        if incident_type.reset_period == 'DAILY':
+            start_date = today
+        elif incident_type.reset_period == 'WEEKLY':
+            start_date = today - timezone.timedelta(days=today.weekday())
+        elif incident_type.reset_period == 'BIWEEKLY':
+            # Simplificación: primer o segunda quincena del mes
+            if today.day <= 15:
+                start_date = today.replace(day=1)
+            else:
+                start_date = today.replace(day=16)
+        elif incident_type.reset_period == 'MONTHLY':
+            start_date = today.replace(day=1)
+        
+        # Contar incidencias acumuladas
+        count_filter = {
+            'employee': self.employee,
+            'incident_type': incident_type,
+            'status': 'AP'  # Solo aprobadas
+        }
+        
+        if start_date:
+            count_filter['incident_date__gte'] = start_date
+            
+        # Evitar contar incidencias generadas automáticamente
+        count_filter['is_generated'] = False
+        
+        accumulated_count = IncidenciasEmpleadoModel.objects.filter(**count_filter).count()
+        
+        # Si alcanzó el límite, generar la incidencia acumulativa
+        if accumulated_count >= cumulative_count:
+            # Crear la incidencia resultante
+            IncidenciasEmpleadoModel.objects.create(
+                employee=self.employee,
+                incident_type=incident_type.cumulative_effect_type,
+                incident_date=today,
+                start_date=today,
+                end_date=today,
+                details=f"Generada automáticamente por acumulación de {accumulated_count} incidencias de tipo {incident_type.name}",
+                status='AP',  # Automáticamente aprobada
+                parent_incident=self,
+                is_generated=True,
+                approved_by=self.approved_by,
+                created_by=self.created_by or self.approved_by,  # AÑADIR ESTA LÍNEA
+                updated_by=self.created_by or self.approved_by   # AÑADIR ESTA LÍNEA
+            )
+            
+            # Opcional: marcar las incidencias acumuladas como "consumidas"
+            #if incident_type.reset_period != 'NEVER':
+            #    EmployeeIncident.objects.filter(**count_filter).update(
+            #        details=models.F('details') + "\nContabilizada en incidencia acumulativa."
+            #    )
+            
+    
+    def approve(self, user):
+        """Aprueba la incidencia"""
+        if self.status == 'PE':
+            self.status = 'AP'
+            self.approval_date = timezone.now()
+            self.approved_by = user
+            self.save()
+    
+    def reject(self, user, reason=None):
+        """Rechaza la incidencia"""
+        if self.status == 'PE':
+            self.status = 'RE'
+            self.approval_date = timezone.now()
+            self.approved_by = user
+            if reason:
+                self.details = f"{self.details or ''}\n\nRechazado: {reason}".strip()
+            self.save()
+            
+    def mark_as_processed(self, payroll_period=None):
+        """Marca la incidencia como procesada en nómina"""
+        if self.status == 'AP':
+            self.status = 'PR'
+            self.processed_in_payroll = True
+            if payroll_period:
+                self.payroll_period = payroll_period
+            self.save()
