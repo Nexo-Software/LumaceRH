@@ -20,7 +20,8 @@ class PostulanteModel(BaseModel):
     pais = models.CharField(max_length=255, verbose_name='País', null=True, blank=True)
     @property
     def direccion(self):
-        return f'{self.calle} # {self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
+        # Devuelve la dirección completa del postulante en un formato legible (ej. Calle #Número, Ciudad, C.P. Código Postal. Provincia, País)
+        return f'{self.calle} #{self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
     direccion.fget.short_description = 'Dirección'
     # Datos de puesto
     puesto = models.ForeignKey(PuestoModel, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)

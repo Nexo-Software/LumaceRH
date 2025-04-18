@@ -9,7 +9,6 @@ class ContratoBasicForm(forms.ModelForm):
         fields = [
             'nombre',
             'tipo_contrato',
-            'horas_trabajo',
         ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
