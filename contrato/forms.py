@@ -19,8 +19,8 @@ class ContratoSalaryForm(forms.ModelForm):
     class Meta:
         model = ContratoModel
         fields = [
+            'horas_trabajo',
             'salario_base',
-            'frecuencia_pago',
         ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
