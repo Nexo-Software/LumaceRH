@@ -17,7 +17,7 @@ class SucursalModel(BaseModel):
     pais = models.CharField(max_length=255, verbose_name='País', null=True, blank=True, help_text='País de la empresa')
     @property
     def direccion(self):
-        return f'{self.calle} # {self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
+        return f'{self.calle} #{self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
     direccion.fget.short_description = 'Dirección'
     # Datos de Contacto
     telefono = models.CharField(max_length=20, verbose_name='Teléfono', null=True, blank=True, help_text='Teléfono de la empresa')
