@@ -1,12 +1,31 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-
+from django.utils.html import format_html
 # Register your models here.
 from .models import EmpleadoModel, PostulanteModel
 
 @admin.register(PostulanteModel)
 class PostulanteAdmin(ModelAdmin):
-    list_display = ('usuario__first_name', 'puesto', 'contrato', 'direccion', 'estado')
+    def get_estado_display(self, obj):
+        """Muestra el estado del postulante con formato visual."""
+        estados = {
+            'P': ('Pendiente', '#FFA500', '#fff'),  # Naranja para pendiente
+            'A': ('Aceptado', '#4CAF50', '#fff'),   # Verde para aceptado
+            'R': ('Rechazado', '#F44336', '#fff'),  # Rojo para rechazado
+        }
+        
+        label, bg_color, text_color = estados.get(obj.estado, ('Desconocido', '#999', '#fff'))
+        
+        return format_html(
+            '<span style="background-color: {}; color: {}; padding: 5px 10px; '
+            'border-radius: 10px; font-weight: bold; font-size: 0.9em;">{}</span>',
+            bg_color, text_color, label
+        )
+    
+    get_estado_display.short_description = 'Estado'
+    
+    # Actualiza list_display para usar el nuevo método en lugar del campo estado directamente
+    list_display = ('usuario__first_name', 'puesto', 'contrato', 'direccion', 'get_estado_display')
     autocomplete_fields = ('usuario', 'puesto', 'contrato')
     search_fields = ('usuario__username', 'puesto', 'contrato')
     list_filter = ('estado',)
