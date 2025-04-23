@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import CategoriaIncidenciasModel, TipoIncidenciasModel, IncidenciasEmpleados
+from .models import IncidenciasEmpleados
 
 # IA
 from openai import OpenAI
