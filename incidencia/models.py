@@ -37,44 +37,6 @@ class CategoriaIncidenciasModel(BaseModel):
     def __str__(self):
         return self.nombre
 
-class TiposFormulasModel(BaseModel):
-    """
-    Modelo que define los tipos de fórmulas (Fijo, Porcentaje, etc.)
-    Esto permite a cada empresa definir sus propios tipos de fórmulas
-    """
-    nombre = models.CharField(max_length=100, verbose_name="Nombre")
-    descripcion = models.TextField(verbose_name="Descripción", null=True, blank=True)
-    codigo = models.CharField(max_length=3, verbose_name="Código", null=True, blank=True, unique=True, help_text="Código único para identificar el tipo de fórmula")
-    class Meta:
-        verbose_name = "Tipo de Fórmula"
-        verbose_name_plural = "Tipos de Fórmulas"
-        db_table = "tipo_formula_incidencias"
-    
-    def __str__(self):
-        return self.nombre
-
-class FormulaIncidenciasModel(BaseModel):
-    """
-    Modelo que define las fórmulas personalizadas para incidencias
-    Esto permite a cada empresa definir sus propias fórmulas
-    """
-    nombre = models.CharField(max_length=100, verbose_name="Nombre")
-    descripcion = models.TextField(verbose_name="Descripción", null=True, blank=True)
-    codigo = models.ForeignKey(
-        TiposFormulasModel, 
-        on_delete=models.PROTECT, 
-        related_name="formula", 
-        verbose_name="Tipo de Fórmula"
-    )
-    formula_detalle = models.TextField(verbose_name="Detalle de la Fórmula", null=True, blank=True)
-    class Meta:
-        verbose_name = "Fórmula de Incidencias"
-        verbose_name_plural = "Fórmulas de Incidencias"
-        db_table = "formulas_incidencias"
-    
-    def __str__(self):
-        return self.nombre
-
 class TipoIncidenciasModel(BaseModel):
     nombre = models.CharField(max_length=100, verbose_name="Nombre")
     descripcion = models.TextField(verbose_name="Descripción", null=True, blank=True)
@@ -83,18 +45,6 @@ class TipoIncidenciasModel(BaseModel):
         on_delete=models.PROTECT, 
         related_name="tipo_incidencia", 
         verbose_name="Categoría de Incidencia"
-    )
-    formula = models.ForeignKey(
-        FormulaIncidenciasModel, 
-        on_delete=models.PROTECT, 
-        related_name="tipo_incidencia", 
-        verbose_name="Fórmula de Incidencia"
-    )
-    referencia_monto = models.ForeignKey(
-        ContratoModel, 
-        on_delete=models.PROTECT, 
-        related_name="tipo_incidencia", 
-        verbose_name="Referencia de Monto"
     )
     class Meta:
         verbose_name = "Tipo de Incidencia"
@@ -128,6 +78,20 @@ class IncidenciasEmpleados(BaseModel):
         default='PENDIENTE', 
         verbose_name="Estado de la Incidencia"
     )
+    observaciones = RichTextField(verbose_name="Observaciones", null=True, blank=True)
+    dif_puesto = models.BooleanField(
+        default=False, 
+        verbose_name="Diferente puesto de trabajo",
+        help_text="Indica si la incidencia es para un puesto diferente al habitual"
+    )
+    empleado_obj = models.ForeignKey(
+        EmpleadoModel,
+        on_delete=models.CASCADE,
+        related_name="incidencias_empleado_obj",
+        verbose_name="Empleado Objetivo",
+        blank=  True,
+        null=True,
+    ) # nos sirve para obtener su contrato (cuanto gana para ajustar la incidencia)
     class Meta:
         verbose_name = "Incidencia de Empleado"
         verbose_name_plural = "Incidencias de Empleados"
