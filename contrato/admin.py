@@ -11,6 +11,7 @@ class ContratoAdmin(ModelAdmin):
     list_editable = ('status',)
     list_filter = ('tipo_contrato', 'status') 
     date_hierarchy = 'fecha_inicio'
+    search_fields = ('nombre', 'tipo_contrato')
     fieldsets = (
         ('Información del contrato', {
             'fields': ('nombre', 'tipo_contrato', 'horas_trabajo', 'salario_base', 'fecha_inicio', 'fecha_fin')

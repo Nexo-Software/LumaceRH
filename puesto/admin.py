@@ -7,6 +7,7 @@ from .models import PuestoModel
 class PuestoAdmin(ModelAdmin):
     """Admin para el puesto"""
     list_display = ('nombre', 'departamento', 'status')
+    search_fields = ('nombre', 'departamento__nombre')
     autocomplete_fields = ('departamento',)
     list_editable = ('status',)
     fieldsets = (

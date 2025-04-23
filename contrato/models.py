@@ -25,3 +25,5 @@ class ContratoModel(BaseModel):
         verbose_name = 'Contrato'
         verbose_name_plural = 'Contratos'
         db_table = 'contratos'
+    def __str__(self):
+        return f"{self.nombre} - {self.tipo_contrato} - {self.horas_trabajo} horas - ${self.salario_base}"

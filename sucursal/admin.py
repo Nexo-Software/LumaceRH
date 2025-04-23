@@ -8,6 +8,7 @@ class SucursalAdmin(ModelAdmin):
     """Admin para la sucursal"""
     list_display = ('empresa', 'nombre', 'direccion', 'telefono', 'email', 'status')
     list_editable = ('status',)
+    search_fields = ('nombre', 'empresa__razon_social',)
     autocomplete_fields = ('empresa','encargado')
     fieldsets = (
         ('Información de la sucursal', {
