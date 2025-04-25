@@ -23,7 +23,7 @@ def update_postulante_status(sender, instance, created, **kwargs):
         peticion = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
-                {"role": "system", "content": "Eres un asistente de RRHH profesional  en México del estado de veracruz que debe ayudar a gestionar las incidencias"},
+                {"role": "system", "content": "Eres un asistente de RRHH profesional  en México del estado de veracruz que debe ayudar a gestionar las incidencias, como respuesta solo quiero que me digas unica y exclusivamente el monto."},
                 {"role": "user", "content": f'la incidencia aprobada es {instance.tipo_incidencia.nombre}, el sueldo base del empleado es: {instance.empleado.contrato.salario_base} la categoria de la incidencia es: {instance.tipo_incidencia.categoria.nombre} y lo que debes hacer con esta informacion es: {instance.tipo_incidencia.descripcion}'},
             ],
             stream=False
