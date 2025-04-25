@@ -92,6 +92,14 @@ class IncidenciasEmpleados(BaseModel):
         blank=  True,
         null=True,
     ) # nos sirve para obtener su contrato (cuanto gana para ajustar la incidencia)
+    # Monto de la incidencia
+    monto = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        verbose_name="Monto de la Incidencia", 
+        null=True, 
+        blank=True
+    )	
     class Meta:
         verbose_name = "Incidencia de Empleado"
         verbose_name_plural = "Incidencias de Empleados"
