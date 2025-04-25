@@ -25,7 +25,8 @@ class TurnosModel(BaseModel):
         db_table = "turno"
     
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} ({self.hora_inicio.strftime('%H:%M')} - {self.hora_fin.strftime('%H:%M')})"
+
 class SemanaModel(BaseModel):
     """
     Modelo que define una semana de trabajo.
@@ -45,41 +46,72 @@ class SemanaModel(BaseModel):
         db_table = "semana"
     
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} ({self.fecha_inicio} al {self.fecha_fin})"
 
-class HorarioModel(BaseModel):
-    # Usar un inline (tabularinline) para poner a los empleados en el admin de horarios
+class ProgramacionDiariaModel(BaseModel):
     """
-    Modelo que define el horario de trabajo de un empleado.
+    Modelo que define un día específico de la programación de horarios.
+    Aquí se asignan múltiples empleados a un día y turno específicos.
     """
-    dia = models.DateField(verbose_name="Día", help_text="Día de la semana", null=False, blank=False)
+    semana = models.ForeignKey(
+        SemanaModel,
+        on_delete=models.CASCADE,
+        related_name="programaciones",
+        verbose_name="Semana"
+    )
+    dia = models.DateField(
+        verbose_name="Día",
+        help_text="Día de la programación"
+    )
     turno = models.ForeignKey(
-        TurnosModel, 
-        on_delete=models.PROTECT, 
-        related_name="horario_turno", 
-        verbose_name="Turno",
-        null=False, 
-        blank=False
+        TurnosModel,
+        on_delete=models.PROTECT,
+        related_name="programaciones",
+        verbose_name="Turno"
+    )
+    descripcion = models.CharField(
+        max_length=255,
+        verbose_name="Descripción",
+        blank=True, 
+        null=True
+    )
+    
+    class Meta:
+        verbose_name = "Programación Diaria"
+        verbose_name_plural = "Programaciones Diarias"
+        db_table = "programacion_diaria"
+        unique_together = ['semana', 'dia', 'turno']  # No puede haber duplicados
+    
+    def __str__(self):
+        return f"Programación {self.dia} - {self.turno.nombre}"
+
+class AsignacionEmpleadoModel(BaseModel):
+    """
+    Modelo que asigna un empleado a una programación diaria específica.
+    """
+    programacion = models.ForeignKey(
+        ProgramacionDiariaModel,
+        on_delete=models.CASCADE,
+        related_name="asignaciones",
+        verbose_name="Programación"
     )
     empleado = models.ForeignKey(
-        EmpleadoModel, 
-        on_delete=models.PROTECT, 
-        related_name="horario_empleado", 
-        verbose_name="Empleado",
-        null=False, 
-        blank=False
+        EmpleadoModel,
+        on_delete=models.PROTECT,
+        related_name="asignaciones_horario",
+        verbose_name="Empleado"
     )
-    semana = models.ForeignKey(
-        SemanaModel, 
-        on_delete=models.PROTECT, 
-        related_name="horario_semana", 
-        verbose_name="Semana",
-        null=False, 
-        blank=False
+    observaciones = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Observaciones"
     )
+    
     class Meta:
-        verbose_name = "Horario"
-        verbose_name_plural = "Horarios"
-        db_table = "horario"
+        verbose_name = "Asignación de Empleado"
+        verbose_name_plural = "Asignaciones de Empleados"
+        db_table = "asignacion_empleado"
+        unique_together = ['programacion', 'empleado']  # Un empleado no puede estar dos veces en la misma programación
+    
     def __str__(self):
-        return f"Horario de {self.empleado} - {self.dia} - {self.turno}"
+        return f"{self.empleado} - {self.programacion}"
