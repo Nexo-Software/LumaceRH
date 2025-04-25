@@ -4,7 +4,7 @@ from incidencia.models import IncidenciasEmpleados
 from empleado.models import EmpleadoModel
 # Create your models here.
 
-class Nomia(BaseModel):
+class NomiaModel(BaseModel):
     empleado = models.ForeignKey(
         EmpleadoModel, 
         on_delete=models.PROTECT, 
