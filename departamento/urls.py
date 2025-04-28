@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import DepartamentoListView, DepartamentoCreateView, DepartamentoDetailView, DepartamentoDeleteView
 from rest_framework.routers import DefaultRouter
 from .viewsets import DepartamentoViewSet
