@@ -22,6 +22,8 @@ urlpatterns = [
     path("unicorn/", include("django_unicorn.urls")),
     # allauth
     path('accounts/', include('allauth.urls')),
+    # Rest Framework
+    path('api-auth/', include('rest_framework.urls')),
     # Local apps
     path('', include('base.urls')),
     path('empresa/', include('empresa.urls')),
