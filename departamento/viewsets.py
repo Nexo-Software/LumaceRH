@@ -16,4 +16,3 @@ class DepartamentoViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         """Sobrescribir el método perform_update para actualizar el usuario que modifica el departamento."""
         serializer.save(updated_by=self.request.user)
-
