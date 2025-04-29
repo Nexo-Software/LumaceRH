@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'formtools',
-    'ckeditor',
+    'django_ckeditor_5',
     # Allauth
     'allauth',
     'allauth.account',

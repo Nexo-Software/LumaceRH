@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from base.models import BaseModel
 from puesto.models import PuestoModel
 from contrato.models import ContratoModel
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 # Create your models here.
 
 
@@ -28,7 +28,7 @@ class PostulanteModel(BaseModel):
     # Datos de contrato
     contrato = models.ForeignKey(ContratoModel, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_contrato', null=True, blank=True)
     # Notas
-    notas = RichTextField(null=True, blank=True)
+    notas = CKEditor5Field(null=True, blank=True)
     # Estado del postulante
     ESTADO_CHOICES = (
         ('P', 'Pendiente'),
@@ -54,7 +54,7 @@ class EmpleadoModel(BaseModel):
     # Sucursal
     sucursal = models.ForeignKey('sucursal.SucursalModel', on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_sucursal', null=True, blank=True)
     # Notas
-    notas = RichTextField(null=True, blank=True)
+    notas = CKEditor5Field(null=True, blank=True)
     
     def __str__(self):
         return f"{self.postulante.usuario.username} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
