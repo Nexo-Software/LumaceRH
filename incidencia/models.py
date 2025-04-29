@@ -2,7 +2,7 @@ from django.db import models
 from base.models import BaseModel
 from empleado.models import EmpleadoModel
 from contrato.models import ContratoModel
-from django_ckeditor_5.fields import CKEditor5Field
+from tinymce.models import HTMLField
 # Create your models here.
 
 # Nuevos modelos para manejar las incidencias de forma más eficiente (Categoria, Formulas, Tipos, Incidencias)
@@ -78,7 +78,7 @@ class IncidenciasEmpleados(BaseModel):
         default='PENDIENTE', 
         verbose_name="Estado de la Incidencia"
     )
-    observaciones = CKEditor5Field(verbose_name="Observaciones", null=True, blank=True)
+    observaciones = HTMLField(verbose_name="Observaciones", null=True, blank=True)
     dif_puesto = models.BooleanField(
         default=False, 
         verbose_name="Diferente puesto de trabajo",
