@@ -55,7 +55,8 @@ class PostulanteAdmin(ModelAdmin):
         
 @admin.register(EmpleadoModel)
 class EmpleadoAdmin(ModelAdmin):
-    list_display = ('postulante', 'puesto', 'contrato', 'sucursal', 'status')
+    list_display = ('postulante', 'puesto', 'contrato', 'get_sueldo', 'sucursal', 'status')
+    list_filter = ('status', 'puesto', 'sucursal')
     list_editable = ('status',)
     search_fields = ('postulante__usuario__username', 'puesto', 'contrato')
     autocomplete_fields = ('postulante', 'puesto', 'contrato', 'sucursal')
@@ -68,6 +69,13 @@ class EmpleadoAdmin(ModelAdmin):
             'classes': ('collapse',)
         })
     )
+    def get_sueldo(self, obj):
+        salario_base = obj.contrato.salario_base
+        quincena = salario_base * 15
+        # redondear (9,999.90) a (10,000.00)
+        quincena = round(quincena, 2)
+        return f"${quincena:,.2f}"
+    get_sueldo.short_description = 'Sueldo'
     readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by')
     def save_model(self, request, obj, form, change):
         if not change:
