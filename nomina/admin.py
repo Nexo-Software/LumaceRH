@@ -64,7 +64,7 @@ class NominaAdmin(ModelAdmin):
     )
     
     # Campos de solo lectura
-    readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by')
+    readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by', 'total_percepciones', 'total_deducciones', 'total_neto')
     
     def save_model(self, request, obj, form, change):
         """Asigna el usuario que crea o actualiza el registro."""
