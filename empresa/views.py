@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from formtools.wizard.views import SessionWizardView
 # Vistas basadas en clases
@@ -63,3 +63,28 @@ class EmpresaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         except ProtectedError:
             messages.error(request, "No se puede eliminar la empresa porque está relacionada con otros registros.")
         return redirect(self.success_url)
+
+class EmpresaUpdateWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
+    permission_required = 'empresa.change_empresamodel'
+    template_name = 'empresa_wizard_form.html'
+    form_list = [
+        ('basic', EmpresaBasicInfoForm),
+        ('address', EmpresaAddressForm),
+        ('contact', EmpresaContactForm),
+        ('fiscal', EmpresaFiscalForm),
+    ]
+
+    def get_form_instance(self, step):
+        # Obtener el objeto desde la base de datos solo una vez
+        if not hasattr(self, 'empresa'):
+            self.empresa = EmpresaModel.objects.get(pk=self.kwargs['pk'])
+        return self.empresa
+
+    def done(self, form_list, **kwargs):
+        # Guardar el objeto editado
+        empresa = self.get_form_instance(None)
+        for form in form_list:
+            for field, value in form.cleaned_data.items():
+                setattr(empresa, field, value)
+        empresa.save()
+        return redirect('empresa_detail', pk=empresa.pk)

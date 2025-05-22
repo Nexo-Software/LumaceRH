@@ -20,7 +20,7 @@ class PostulanteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     # Modificar el query para que solo mueste a los que estan como pendientes
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(estado='P')
+        return queryset.filter(estado='Pendiente')
 
 class NuevoUsuarioView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = User # Modelo a utilizar

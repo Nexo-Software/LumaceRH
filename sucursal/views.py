@@ -4,7 +4,7 @@ from formtools.wizard.views import SessionWizardView
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 # Vistas
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, DeleteView
 # Modelos
 from .models import SucursalModel
 from django.db.models import ProtectedError
@@ -61,3 +61,26 @@ class SucursalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
         except ProtectedError:
             messages.error(request, "No se puede eliminar la sucursal porque está relacionada con otros registros.")
         return redirect(self.success_url)
+
+class SucursalUpdateWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
+    permission_required = 'sucursal.change_sucursalmodel'
+    template_name = 'sucursal_wizard_form.html'
+    form_list = [
+        ('basic', SucursalBasicInfoForm),
+        ('address', SucursalAddressForm),
+        ('contact', SucursalContactForm),
+    ]
+
+    def get_form_instance(self, step):
+        if not hasattr(self, 'sucursal'):
+            self.sucursal = SucursalModel.objects.get(pk=self.kwargs['pk'])
+        return self.sucursal
+
+    def done(self, form_list, **kwargs):
+        # Guardar el objeto editado
+        sucursal = self.get_form_instance(None)
+        for form in form_list:
+            for field, value in form.cleaned_data.items():
+                setattr(sucursal, field, value)
+        sucursal.save()
+        return redirect('sucursal_detail', pk=sucursal.pk)

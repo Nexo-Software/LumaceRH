@@ -1,10 +1,56 @@
 {% extends "base.html" %}
 {% block titulo %}
-{{ sucursal.nombre }} - Detalle de Sucursal
+    {{ sucursal.nombre }} - Detalle de Sucursal
 {% endblock titulo %}
 
 {% block contenido %}
-<h1 class="display-3">
-    {{ sucursal.nombre }}
-</h1>
+    <h1 class="display-3">
+        {{ sucursal.nombre }}
+    </h1>
+    <div class="row mt-2">
+        <div class="col-12">
+            <!-- Detalle de la empresa -->
+            <div class="row">
+                <div class="col-12">
+                    <!-- Tabla con los detalles de la empresa -->
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th>Empresa</th>
+                            <td>{{ sucursal.empresa }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <td>{{ sucursal.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dirección</th>
+                            <td>{{ sucursal.direccion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Teléfono</th>
+                            <td>{{ sucursal.telefono }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ sucursal.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Web</th>
+                            <td><a href="{{ sucursal.web }}" target="_blank">{{ sucursal.web }}</a></td>
+                        </tr>
+                        <tr>
+                            <th>Encargado</th>
+                            <td>{{ sucursal.encargado }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-12">
+                    <!-- Botón para volver a la lista de empresas -->
+                    <a href="{% url 'sucursal_list' %}" class="btn btn-primary"><i class="fa-solid fa-circle-arrow-left"></i> Volver a la lista de sucursales</a>
+                    <!-- Botón para editar la empresa -->
+                    <a href="{% url 'sucursal_update' sucursal.id %}" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

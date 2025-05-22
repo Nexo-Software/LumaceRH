@@ -1,13 +1,53 @@
 {% extends "base.html" %}
 {% block titulo %}
-Empresas
+    Empresas
 {% endblock titulo %}
 {% block contenido %}
-<h1 class="display-3">{{ empresa.razon_social }}</h1>
-<div class="row mt-2">
-    <div class="col-12">
-        <!-- Detalle de la empresa -->
-        
+    <h1 class="display-3 mb-2">{{ empresa.razon_social }}</h1>
+    <div class="row mt-2">
+        <div class="col-12">
+            <!-- Detalle de la empresa -->
+            <div class="row">
+                <div class="col-12">
+                    <!-- Tabla con los detalles de la empresa -->
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th>Razon Social</th>
+                            <td>{{ empresa.razon_social }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre Comercial</th>
+                            <td>{{ empresa.nombre_comercial }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dirección</th>
+                            <td>{{ empresa.direccion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Teléfono</th>
+                            <td>{{ empresa.telefono }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ empresa.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Web</th>
+                            <td><a href="{{ empresa.web }}" target="_blank">{{ empresa.web }}</a></td>
+                        </tr>
+                        <tr>
+                            <th>RFC</th>
+                            <td>{{ empresa.rfc }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-12">
+                    <!-- Botón para volver a la lista de empresas -->
+                    <a href="{% url 'empresa_list' %}" class="btn btn-primary"><i class="fa-solid fa-circle-arrow-left"></i> Volver a la lista de empresas</a>
+                    <!-- Botón para editar la empresa -->
+                    <a href="{% url 'empresa_update' empresa.id %}" class="btn btn-warning">Editar</a>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 {% endblock %}

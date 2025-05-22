@@ -31,11 +31,11 @@ class PostulanteModel(BaseModel):
     notas = HTMLField(null=True, blank=True)
     # Estado del postulante
     ESTADO_CHOICES = (
-        ('P', 'Pendiente'),
-        ('A', 'Aceptado'),
-        ('R', 'Rechazado'),
+        ('Pendiente', 'Pendiente'),
+        ('Aceptado', 'Aceptado'),
+        ('Rechazado', 'Rechazado'),
     )
-    estado = models.CharField(max_length=1, choices=ESTADO_CHOICES, default='P')
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Pendiente')
     
     def __str__(self):
         return f"{self.usuario.username} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
