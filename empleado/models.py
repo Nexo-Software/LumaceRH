@@ -24,9 +24,9 @@ class PostulanteModel(BaseModel):
         return f'{self.calle} #{self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
     direccion.fget.short_description = 'Dirección'
     # Datos de puesto
-    puesto = models.ForeignKey(PuestoModel, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)
+    puesto = models.ForeignKey(PuestoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)
     # Datos de contrato
-    contrato = models.ForeignKey(ContratoModel, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_contrato', null=True, blank=True)
+    contrato = models.ForeignKey(ContratoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_contrato', null=True, blank=True)
     # Notas
     notas = HTMLField(null=True, blank=True)
     # Estado del postulante
@@ -48,11 +48,11 @@ class EmpleadoModel(BaseModel):
     # {nombre, apellido, correo, usuario}
     postulante = models.OneToOneField(PostulanteModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_postulante', null=False, blank=False)
     # Datos de puesto
-    puesto = models.ForeignKey(PuestoModel, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)
+    puesto = models.ForeignKey(PuestoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)
     # Datos de contrato
-    contrato = models.ForeignKey(ContratoModel, on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_contrato', null=True, blank=True)
+    contrato = models.ForeignKey(ContratoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_contrato', null=True, blank=True)
     # Sucursal
-    sucursal = models.ForeignKey('sucursal.SucursalModel', on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_sucursal', null=True, blank=True)
+    sucursal = models.ForeignKey('sucursal.SucursalModel', on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_sucursal', null=True, blank=True)
     # Notas
     notas = HTMLField(null=True, blank=True)
     

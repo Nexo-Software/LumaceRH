@@ -2,10 +2,12 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from formtools.wizard.views import SessionWizardView
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 # Vistas
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 # Modelos
 from .models import SucursalModel
+from django.db.models import ProtectedError
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Formularios
@@ -51,6 +53,11 @@ class SucursalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     template_name = 'sucursal_confirm_delete.html'
     success_url = reverse_lazy('sucursal_list')
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Sucursal eliminada correctamente.")
-        return super().delete(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        sucursal = self.get_object()
+        try:
+            sucursal.delete()
+            messages.success(request, "Sucursal eliminada correctamente.")
+        except ProtectedError:
+            messages.error(request, "No se puede eliminar la sucursal porque está relacionada con otros registros.")
+        return redirect(self.success_url)

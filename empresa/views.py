@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from formtools.wizard.views import SessionWizardView
 # Vistas basadas en clases
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 # Modelos
 from .models import EmpresaModel
+from django.db.models import ProtectedError
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Formularios
@@ -53,7 +55,11 @@ class EmpresaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     context_object_name = 'empresa'
     success_url = reverse_lazy('empresa_list')
     
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         empresa = self.get_object()
-        messages.success(request, f'La empresa "{empresa.razon_social}" ha sido eliminada.')
-        return super().delete(request, *args, **kwargs)
+        try:
+            empresa.delete()
+            messages.success(request, "Empresa eliminada correctamente.")
+        except ProtectedError:
+            messages.error(request, "No se puede eliminar la empresa porque está relacionada con otros registros.")
+        return redirect(self.success_url)

@@ -1,10 +1,12 @@
 # Django
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import redirect
 # Vistas
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 # Modelos
 from .models import PuestoModel
+from django.db.models import ProtectedError
 # Formularios
 from .forms import PuestoForm
 # Mixins
@@ -45,6 +47,11 @@ class PuestoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'puesto_confirm_delete.html'
     success_url = reverse_lazy('puesto_list')
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Puesto eliminado correctamente.")
-        return super().delete(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        puesto = self.get_object()
+        try:
+            puesto.delete()
+            messages.success(request, "Puesto eliminado correctamente.")
+        except ProtectedError:
+            messages.error(request, "No se puede eliminar el puesto porque está relacionado con otros registros.")
+        return redirect(self.success_url)

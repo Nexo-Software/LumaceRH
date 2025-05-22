@@ -1,6 +1,8 @@
 # Django
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.contrib import messages
+from django.shortcuts import redirect
 # Vistas
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
@@ -8,6 +10,7 @@ from formtools.wizard.views import SessionWizardView
 from .forms import ContratoBasicForm, ContratoSalaryForm, ContratoDateForm
 # Modelos
 from .models import ContratoModel
+from django.db.models import ProtectedError
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -49,3 +52,12 @@ class ContratoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     context_object_name = 'contrato'
     success_url = reverse_lazy('contrato_list') # URL a redirigir después de eliminar el objeto
     permission_required = 'contrato.delete_contrato'
+
+    def post(self, request, *args, **kwargs):
+        contrato = self.get_object()
+        try:
+            contrato.delete()
+            messages.success(request, "Contrato eliminado correctamente.")
+        except ProtectedError:
+            messages.error(request, "No se puede eliminar el contrato porque está relacionado con otros registros.")
+        return redirect(self.success_url)

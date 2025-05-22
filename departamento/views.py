@@ -1,10 +1,12 @@
 # Django
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import redirect
 # Vistas
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 # Modelos
 from .models import DepartamentoModel
+from django.db.models import ProtectedError
 # Formularios
 from .forms import DepartamentoForm
 # Mixins
@@ -44,6 +46,11 @@ class DepartamentoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Delete
     template_name = 'departamento_confirm_delete.html'
     success_url = reverse_lazy('departamento_list')
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Sucursal eliminada correctamente.")
-        return super().delete(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        departamento = self.get_object()
+        try:
+            departamento.delete()
+            messages.success(request, "Departamento eliminado correctamente.")
+        except ProtectedError:
+            messages.error(request, "No se puede eliminar el departamento porque está relacionado con otros registros.")
+        return redirect(self.success_url)
