@@ -80,10 +80,10 @@ class EmpleadoListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = EmpleadoModel # Modelo a utilizar
     template_name = 'empleado_list.html' # Plantilla a utilizar
     context_object_name = 'empleados'
-    permission_required = 'empleado.view_empleado'
+    permission_required = 'empleado.view_empleadomodel'
 
 class EmpleadoWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
-    permission_required = 'empleado.add_empleado'
+    permission_required = 'empleado.add_empleadomodel'
     template_name = 'empleado_wizard_form.html'
     form_list = [
         ('info', EmpleadoForm),

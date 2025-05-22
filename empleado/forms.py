@@ -98,7 +98,7 @@ class EmpleadoNotasForm(forms.ModelForm):
     class Meta:
         model = EmpleadoModel
         fields = [
-            'notas',
+            'notas', 'fecha_contratacion'
         ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

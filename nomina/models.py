@@ -25,24 +25,24 @@ class NomiaModel(BaseModel):
         decimal_places=2, 
         verbose_name="Total de Percepciones", 
         help_text="Total de percepciones del empleado", 
-        null=False, 
-        blank=False
+        null=True,
+        blank=True
     )
     total_deducciones = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 
         verbose_name="Total de Deducciones", 
         help_text="Total de deducciones del empleado", 
-        null=False, 
-        blank=False
+        null=True,
+        blank=True
     )
     total_neto = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 
         verbose_name="Total Neto", 
         help_text="Total neto a pagar al empleado", 
-        null=False, 
-        blank=False
+        null=True,
+        blank=True
     )
     # Fechas de pago
     fecha_pago = models.DateField(verbose_name="Fecha de Pago", help_text="Fecha en la que se realizó el pago", null=True, blank=True)

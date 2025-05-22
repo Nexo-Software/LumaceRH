@@ -19,10 +19,10 @@ class ContratoListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'contrato_list.html' # Plantilla a utilizar
     context_object_name = 'contratos'
     # constratos = ContratoModel.objects.all()
-    permission_required = 'contrato.view_contrato'
+    permission_required = 'contrato.view_contratomodel'
 
 class ContratoSessionWizarView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
-    permission_required = 'contrato.add_contrato'
+    permission_required = 'contrato.add_contratomodel'
     template_name = 'contrato_wizard_form.html'
     form_list = [
         ('basic', ContratoBasicForm),
@@ -44,14 +44,14 @@ class ContratoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
     model = ContratoModel # Modelo a utilizar
     template_name = 'contrato_detail.html' # Plantilla a utilizar
     context_object_name = 'contrato'
-    permission_required = 'contrato.view_contrato'
+    permission_required = 'contrato.view_contratomodel'
 
 class ContratoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = ContratoModel # Modelo a utilizar
     template_name = 'contrato_confirm_delete.html' # Plantilla a utilizar
     context_object_name = 'contrato'
     success_url = reverse_lazy('contrato_list') # URL a redirigir después de eliminar el objeto
-    permission_required = 'contrato.delete_contrato'
+    permission_required = 'contrato.delete_contratomodel'
 
     def post(self, request, *args, **kwargs):
         contrato = self.get_object()

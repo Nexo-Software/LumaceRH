@@ -55,7 +55,7 @@ class EmpleadoModel(BaseModel):
     sucursal = models.ForeignKey('sucursal.SucursalModel', on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_sucursal', null=True, blank=True)
     # Notas
     notas = HTMLField(null=True, blank=True)
-    
+    fecha_contratacion = models.DateField(null=True, blank=True, verbose_name='Fecha de Contratación', help_text='Fecha de contratación del empleado')
     def __str__(self):
         return f"{self.postulante.usuario.username} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
     class Meta:

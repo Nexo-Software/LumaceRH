@@ -3,16 +3,16 @@ from base.models import BaseModel
 # Create your models here.
 
 TIPO_CONTRATO = {
-    ('P', 'Indefinido'),
-    ('D', 'Definido'),
-    ('S', 'Servicio'),
-    ('T', 'Temporal'),
+    ('Indefinido', 'Indefinido'),
+    ('Definido', 'Definido'),
+    ('Servicio', 'Servicio'),
+    ('Temporal', 'Temporal'),
 }
 
 class ContratoModel(BaseModel):
     # Información básica
     nombre = models.CharField(max_length=100, null=True, blank=True)
-    tipo_contrato = models.CharField(max_length=1, choices=TIPO_CONTRATO, null=False, blank=False)
+    tipo_contrato = models.CharField(max_length=20, choices=TIPO_CONTRATO, null=False, blank=False)
     # No es por hora de trabajo, es por dia de la semana
     horas_trabajo = models.IntegerField(null=False, blank=False, default=0, help_text='Horas de trabajo diarias')
     # Información de salario
