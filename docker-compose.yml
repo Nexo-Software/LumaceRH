@@ -1,0 +1,29 @@
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django
+    ports:
+      - "8000:8000"
+    restart: always
+    networks:
+      - rh-network
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: edqnLMCSf31.
+      MYSQL_DATABASE: satel-db
+    networks:
+      - satel-net
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+volumes:
+  db_data:
+networks:
+  rh-network:
+    driver: bridge
