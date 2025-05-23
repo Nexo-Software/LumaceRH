@@ -57,7 +57,7 @@ class EmpleadoModel(BaseModel):
     notas = HTMLField(null=True, blank=True)
     fecha_contratacion = models.DateField(null=True, blank=True, verbose_name='Fecha de Contratación', help_text='Fecha de contratación del empleado')
     def __str__(self):
-        return f"{self.postulante.usuario.username} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
+        return f"{self.postulante.usuario.first_name} {self.postulante.usuario.last_name} - {self.puesto.nombre}"
     class Meta:
         db_table = 'empleados'
         managed = True

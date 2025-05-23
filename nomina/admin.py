@@ -23,13 +23,28 @@ class NominaAdmin(ModelAdmin):
             'border-radius: 10px; font-weight: bold; font-size: 0.9em;">{}</span>',
             bg_color, text_color, label
         )
-    
+
     get_estado_display.short_description = 'Estado'
-    
+
+    def get_total_percepciones(self, obj):
+        valor = obj.total_percepciones if obj.total_percepciones is not None else 0
+        return format_html(
+            f'<span style="background-color: #4CAF50; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em;">$ {valor}</span>')
+    get_total_percepciones.short_description = 'Percepciones'
+
+    def get_total_deducciones(self, obj):
+        valor = obj.total_deducciones if obj.total_deducciones is not None else 0
+        return format_html(f'<span style="background-color: #F44336; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em;">$ {valor}</span>')
+    get_total_deducciones.short_description = 'Deducciones'
+
+    def get_total_neto(self, obj):
+        valor = obj.total_neto if obj.total_neto is not None else 0
+        return format_html(f'<span style="background-color: #2196F3; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em;">$ {valor}</span>')
+    get_total_neto.short_description = 'Sueldo Final'
     # Campos a mostrar en la lista de nóminas
-    list_display = ('empleado', 'fecha_generacion', 'total_percepciones', 
-                    'total_deducciones', 'total_neto', 'get_estado_display')
-    
+    list_display = ('empleado', 'fecha_generacion', 'get_total_percepciones',
+                    'get_total_deducciones', 'get_total_neto', 'get_estado_display', 'estado_nomina')
+    list_editable = ('estado_nomina',)
     # Filtros para la lista de nóminas
     list_filter = ('estado_nomina', 'fecha_generacion', 'empleado__sucursal')
     
@@ -79,8 +94,8 @@ class NominaAdmin(ModelAdmin):
     def calculate_totals(self, request, queryset):
         """Acción para calcular los totales de las nóminas seleccionadas."""
         for nomina in queryset:
-            # Aquí podrías implementar la lógica de cálculo
-            # basada en las incidencias y el salario base
+            # Cambiar el estado a GENERADA
+            nomina.estado_nomina = 'GENERADA'
             nomina.save()
         self.message_user(request, f"{queryset.count()} nóminas actualizadas correctamente.")
     calculate_totals.short_description = "Calcular totales de nóminas seleccionadas"
