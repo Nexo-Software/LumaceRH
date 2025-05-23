@@ -14,9 +14,9 @@ services:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: edqnLMCSf31.
-      MYSQL_DATABASE: satel-db
+      MYSQL_DATABASE: db-data
     networks:
-      - satel-net
+      - rh-network
     restart: always
     ports:
       - 3306:3306
