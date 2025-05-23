@@ -1,8 +1,10 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
+from unfold.admin import ModelAdmin, TabularInline
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 # Register your models here.
-from .models import NomiaModel
+from .models import NomiaModel, IncidenciasEmpleados
+
 
 @admin.register(NomiaModel)
 class NominaAdmin(ModelAdmin):
@@ -23,24 +25,24 @@ class NominaAdmin(ModelAdmin):
             'border-radius: 10px; font-weight: bold; font-size: 0.9em;">{}</span>',
             bg_color, text_color, label
         )
-
     get_estado_display.short_description = 'Estado'
 
     def get_total_percepciones(self, obj):
         valor = obj.total_percepciones if obj.total_percepciones is not None else 0
         return format_html(
-            f'<span style="background-color: #4CAF50; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em;">$ {valor}</span>')
+            f'<span style="background-color: #4CAF50; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em; font-weight: bold;">$ {valor}</span>')
     get_total_percepciones.short_description = 'Percepciones'
 
     def get_total_deducciones(self, obj):
         valor = obj.total_deducciones if obj.total_deducciones is not None else 0
-        return format_html(f'<span style="background-color: #F44336; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em;">$ {valor}</span>')
+        return format_html(f'<span style="background-color: #F44336; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em; font-weight: bold;">$ {valor}</span>')
     get_total_deducciones.short_description = 'Deducciones'
 
     def get_total_neto(self, obj):
         valor = obj.total_neto if obj.total_neto is not None else 0
-        return format_html(f'<span style="background-color: #2196F3; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em;">$ {valor}</span>')
+        return format_html(f'<span style="background-color: #2196F3; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.9em; font-weight: bold;">$ {valor}</span>')
     get_total_neto.short_description = 'Sueldo Final'
+
     # Campos a mostrar en la lista de nóminas
     list_display = ('empleado', 'fecha_generacion', 'get_total_percepciones',
                     'get_total_deducciones', 'get_total_neto', 'get_estado_display', 'estado_nomina')

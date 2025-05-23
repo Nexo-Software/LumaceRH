@@ -99,7 +99,7 @@ class IncidenciasEmpleados(BaseModel):
         verbose_name="Monto de la Incidencia", 
         null=True, 
         blank=True
-    )	
+    )
     class Meta:
         verbose_name = "Incidencia de Empleado"
         verbose_name_plural = "Incidencias de Empleados"

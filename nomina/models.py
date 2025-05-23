@@ -14,9 +14,11 @@ class NomiaModel(BaseModel):
         blank=False
     )
     incidencias = models.ManyToManyField(
-        IncidenciasEmpleados, 
+        IncidenciasEmpleados,
         related_name="nomina_incidencias", 
-        verbose_name="Incidencias"
+        verbose_name="Incidencias",
+        null=True,
+        blank=True
     )
     fecha_generacion = models.DateField(verbose_name="Fecha de Generación", help_text="Fecha en la que se generó la nómina", null=False, blank=False)
     # Datos de pago
@@ -55,3 +57,4 @@ class NomiaModel(BaseModel):
         db_table = "nomina"
     def __str__(self):
         return f"Nómina de {self.empleado} - {self.fecha_generacion}"
+

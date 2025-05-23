@@ -1,12 +1,14 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import IncidenciasEmpleados
+
 # IA
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
 load_dotenv()
 client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com")
+
 @receiver(post_save, sender=IncidenciasEmpleados)
 def update_postulante_status(sender, instance, created, **kwargs):
     """
@@ -25,7 +27,9 @@ def update_postulante_status(sender, instance, created, **kwargs):
             ],
             stream=False
         )
+
         respuesta = peticion.choices[0].message.content
+
         respuesta = respuesta.replace("$", "").replace(",", "") # Volver la respuesta a un float
         respuesta = float(respuesta)
         print(respuesta)
