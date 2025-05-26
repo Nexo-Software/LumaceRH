@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: django
+    container_name: django-container
     ports:
       - "8000:8000"
     restart: always
@@ -11,7 +11,7 @@ services:
       - rh-network
   mysql:
     image: mysql:latest
-    container_name: mysql
+    container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: edqnLMCSf31.
       MYSQL_DATABASE: db-data
