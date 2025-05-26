@@ -187,3 +187,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://localhost:8000', 'https://rh.florcatorce.com']
