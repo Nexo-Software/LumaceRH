@@ -18,20 +18,40 @@ def update_postulante_status(sender, instance, created, **kwargs):
         print("La incidencia ha sido creada con éxito.")
     elif instance.estado_incidencia == 'APROBADA':
         print("La incidencia ha sido aprobada.")
-        # Hacer que deepseek haga algo con la incidencia
+
+        user_prompt = f"""
+        Datos de la incidencia:
+        - Tipo de incidencia: {instance.tipo_incidencia.nombre}
+        - Categoría: {instance.tipo_incidencia.categoria.nombre}
+        - Descripción: {instance.tipo_incidencia.descripcion}
+        - Sueldo base del empleado: {instance.empleado.contrato.salario_base}
+
+        Instrucción:
+        Calcula el monto a pagar por esta incidencia de forma precisa. Usa el sueldo base y la descripción como referencia.
+        Solo responde con el número. No incluyas texto adicional, comas ni símbolos.
+        Si no puedes calcularlo, responde 0.
+        """
+
         peticion = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
-                {"role": "system", "content": "Eres un asistente de RRHH profesional  en México del estado de veracruz que debe ayudar a gestionar las incidencias, como respuesta solo quiero que me digas unica y exclusivamente el monto, sin nada de texto."},
-                {"role": "user", "content": f'la incidencia aprobada es {instance.tipo_incidencia.nombre}, el sueldo base del empleado es: {instance.empleado.contrato.salario_base} la categoria de la incidencia es: {instance.tipo_incidencia.categoria.nombre} y lo que debes hacer con esta informacion es: {instance.tipo_incidencia.descripcion}'},
+                {"role": "system",
+                 "content": "Eres un asistente de RRHH profesional en México (Veracruz) que ayuda a calcular el monto exacto a pagar por una incidencia. Solo responde el número."},
+                {"role": "user", "content": user_prompt},
             ],
             stream=False
         )
 
         respuesta = peticion.choices[0].message.content
 
-        respuesta = respuesta.replace("$", "").replace(",", "") # Volver la respuesta a un float
-        respuesta = float(respuesta)
+        try:
+            respuesta = float(respuesta.replace("$", "").replace(",", "").strip())
+            if respuesta < 0 or respuesta > instance.empleado.contrato.salario_base * 2:
+                raise ValueError("Monto fuera de rango.")
+        except Exception as e:
+            print("Error al procesar la respuesta de la IA:", e)
+            respuesta = 0
+
         print(respuesta)
         print(type(respuesta))
         IncidenciasEmpleados.objects.filter(pk=instance.pk).update(monto=respuesta)
