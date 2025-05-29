@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'formtools',
     'tinymce',
+    'import_export',
     # Allauth
     'allauth',
     'allauth.account',

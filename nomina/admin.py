@@ -4,12 +4,14 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 # Register your models here.
 from .models import NomiaModel, IncidenciasEmpleados
-
+# Importar - Exportar
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 @admin.register(NomiaModel)
-class NominaAdmin(ModelAdmin):
+class NominaAdmin(ModelAdmin, ImportExportModelAdmin):
     """Admin para la nómina de empleados"""
-    
+    import_id_fields = ('id',)
     def get_estado_display(self, obj):
         """Muestra el estado de la nómina con formato visual."""
         estados = {

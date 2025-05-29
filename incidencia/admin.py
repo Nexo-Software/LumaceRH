@@ -87,6 +87,7 @@ class IncidenciasEmpleadosAdmin(ModelAdmin):
     list_filter = ('empleado__sucursal', 'tipo_incidencia', 'estado_incidencia',)
     date_hierarchy = 'fecha'
     autocomplete_fields = ('empleado', 'tipo_incidencia', 'empleado_obj',)
+    search_fields = ('empleado__postulante__usuario__first_name', 'empleado__postulante__usuario__last_name', 'tipo_incidencia__nombre')
     readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by', 'monto')
     def save_model(self, request, obj, form, change):
         if not change:
@@ -95,3 +96,13 @@ class IncidenciasEmpleadosAdmin(ModelAdmin):
         else:
             obj.updated_by = request.user
         super().save_model(request, obj, form, change)
+    # Métodos
+    def aceptar_incidencia(self, request, queryset):
+        """Aceptar incidencias seleccionadas."""
+        for incidencia in queryset:
+            incidencia.estado_incidencia = 'APROBADA'
+            incidencia.save()
+        self.message_user(request, "Incidencias aprobadas correctamente.")
+    aceptar_incidencia.short_description = "Aceptar incidencias seleccionadas"
+    # Acciones personalizadas
+    actions = ['aceptar_incidencia']
