@@ -34,14 +34,6 @@ class EmpresaAdmin(ModelAdmin):
         if not change:
             obj.created_by = request.user
             obj.updated_by = request.user
-            # Enviar correo de confirmación al administrador
-            send_mail(
-                'La empresa se a creado',
-                'Este es el primer paso, el sistema funciona correctamente.',
-                'lmcervantessuarez@gmail.com',  # From
-                ['luismariosuarez@lumace.cloud'],  # To
-                fail_silently=False,
-            )
         else:
             obj.updated_by = request.user
         super().save_model(request, obj, form, change)
