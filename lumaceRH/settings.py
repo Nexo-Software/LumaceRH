@@ -177,7 +177,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Allauth settings
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
@@ -186,10 +185,20 @@ AUTHENTICATION_BACKENDS = [
 SOCIALACCOUNT_PROVIDERS = {}
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'lmcervantessuarez@gmail.com'
+EMAIL_HOST_PASSWORD = 'gzlf eqat nsxy jpzv'
+
 # Registro con Email
 ACCOUNT_LOGIN_METHODS = ['email']
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
+LOGIN_REDIRECT_URL = '/'
+
+# API settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
@@ -198,4 +207,5 @@ REST_FRAMEWORK = {
     ]
 }
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://localhost:8000', 'https://rh.florcatorce.com']
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://localhost:8000', 'https://rh.florcatorce.com', 'https://dev.lumace.cloud']
