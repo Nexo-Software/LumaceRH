@@ -83,7 +83,7 @@ class IncidenciasEmpleadosAdmin(ModelAdmin):
     
     get_estado_display.short_description = 'Estado'
         
-    list_display = ('empleado', 'tipo_incidencia', 'fecha', 'get_estado_display', 'created_at', 'updated_by',)
+    list_display = ('empleado', 'tipo_incidencia', 'fecha', 'get_estado_display', 'monto', 'created_at', 'updated_by',)
     list_filter = ('empleado__sucursal', 'tipo_incidencia', 'estado_incidencia',)
     date_hierarchy = 'fecha'
     autocomplete_fields = ('empleado', 'tipo_incidencia', 'empleado_obj',)

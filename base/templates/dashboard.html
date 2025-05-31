@@ -1,5 +1,58 @@
 {% extends "base.html" %}
 {% block titulo %}Inicio{% endblock %}
 {% block contenido %}
-
+    <!-- Estadisticas del Dashboard -->
+    <div class="row text-center g-2">
+        <div class="col-md-4">
+            <div class="card text-bg-primary">
+                <div class="card-body">
+                    <p class="card-title h5">Total de empleados</p>
+                    <p class="card-title display-5">{{ empleados_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-warning">
+                <div class="card-body">
+                    <p class="card-title h5">Incidencias pendientes</p>
+                    <p class="card-title display-5">{{ incidencias_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <p class="card-title h5">Usuarios activos</p>
+                    <p class="card-title display-5">5</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Tabla de ultimas incidencias -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2 class="display-5">Últimas Incidencias</h2>
+            <table class="table table-hover table-striped table-bordered text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Empleado</th>
+                        <th scope="col">Incidencia</th>
+                        <th scope="col">Detalles</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for incidencia in incidencias %}
+                        <tr class="align-middle">
+                            <td>{{ incidencia.empleado.postulante.usuario.first_name }} {{ incidencia.empleado.postulante.usuario.last_name }}</td>
+                            <td>{{ incidencia.tipo_incidencia }}</td>
+                            <td>{% if incidencia.observaciones %}{{ incidencia.observaciones }}{% else %}No se especificio un detalle{% endif %}</td>
+                            <td>{{ incidencia.fecha }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 {% endblock %}
