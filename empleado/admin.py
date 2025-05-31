@@ -9,9 +9,9 @@ class PostulanteAdmin(ModelAdmin):
     def get_estado_display(self, obj):
         """Muestra el estado del postulante con formato visual."""
         estados = {
-            'P': ('Pendiente', '#FFA500', '#fff'),  # Naranja para pendiente
-            'A': ('Aceptado', '#4CAF50', '#fff'),   # Verde para aceptado
-            'R': ('Rechazado', '#F44336', '#fff'),  # Rojo para rechazado
+            'Pendiente': ('Pendiente', '#FFA500', '#fff'),  # Naranja para pendiente
+            'Aceptado': ('Aceptado', '#4CAF50', '#fff'),   # Verde para aceptado
+            'Rechazado': ('Rechazado', '#F44336', '#fff'),  # Rojo para rechazado
         }
         
         label, bg_color, text_color = estados.get(obj.estado, ('Desconocido', '#999', '#fff'))

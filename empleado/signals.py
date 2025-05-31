@@ -10,5 +10,5 @@ def update_postulante_status(sender, instance, created, **kwargs):
     """
     if created:  # Only run when a new record is created, not on updates
         postulante = instance.postulante
-        postulante.estado = 'A'  # Set status to "Accepted"
+        postulante.estado = 'Aceptado'  # Set status to "Accepted"
         postulante.save()

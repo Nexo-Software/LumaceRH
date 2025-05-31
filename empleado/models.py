@@ -24,9 +24,9 @@ class PostulanteModel(BaseModel):
         return f'{self.calle} #{self.numero}, {self.ciudad}, C.P. {self.codigo_postal}. {self.provincia}, {self.pais}'
     direccion.fget.short_description = 'Dirección'
     # Datos de puesto
-    puesto = models.ForeignKey(PuestoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)
+    puesto = models.ForeignKey(PuestoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_puesto', null=False, blank=False)
     # Datos de contrato
-    contrato = models.ForeignKey(ContratoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_contrato', null=True, blank=True)
+    contrato = models.ForeignKey(ContratoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_contrato', null=False, blank=False)
     # Notas
     notas = HTMLField(null=True, blank=True)
     # Estado del postulante
@@ -36,7 +36,6 @@ class PostulanteModel(BaseModel):
         ('Rechazado', 'Rechazado'),
     )
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Pendiente')
-    
     def __str__(self):
         return f"{self.usuario.username} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
     class Meta:
@@ -51,6 +50,13 @@ class EmpleadoModel(BaseModel):
     puesto = models.ForeignKey(PuestoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_puesto', null=True, blank=True)
     # Datos de contrato
     contrato = models.ForeignKey(ContratoModel, on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_contrato', null=True, blank=True)
+    @property
+    def sueldo(self):
+        """
+        Devuelve el sueldo quincenal del postulante.
+        """
+        return self.contrato.salario_base * 15 if self.contrato else 0.0
+    sueldo.fget.short_description = 'Sueldo'
     # Sucursal
     sucursal = models.ForeignKey('sucursal.SucursalModel', on_delete=models.PROTECT, related_name='%(app_label)s_%(class)s_sucursal', null=True, blank=True)
     # Notas

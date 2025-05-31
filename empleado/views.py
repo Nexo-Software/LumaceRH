@@ -99,9 +99,5 @@ class EmpleadoWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         form_data['created_by'] = self.request.user
         form_data['updated_by'] = self.request.user
         EmpleadoModel.objects.create(**form_data)
-        # Hacer que el postulante pase a empleado
-        postulante = form_data['postulante']
-        postulante.estado = 'A'
-        postulante.save()
         # Redirigir a la lista de empleados
         return HttpResponseRedirect(reverse_lazy('empleado_list'))
