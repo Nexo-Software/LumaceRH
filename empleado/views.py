@@ -1,6 +1,7 @@
 # Django
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.db.models import Q # Q para consultas complejas
 # Vistas
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
@@ -101,3 +102,18 @@ class EmpleadoWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         EmpleadoModel.objects.create(**form_data)
         # Redirigir a la lista de empleados
         return HttpResponseRedirect(reverse_lazy('empleado_list'))
+
+# Buscar empleado por Nombre
+class EmpleadoSearchView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = EmpleadoModel
+    template_name = 'buscar_empleado.html'
+    context_object_name = 'empleados'
+    permission_required = 'empleado.view_empleadomodel'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return EmpleadoModel.objects.filter(
+                Q(postulante__usuario__first_name__icontains=query) | Q(postulante__usuario__last_name__icontains=query)
+            )
+        return EmpleadoModel.objects.none()

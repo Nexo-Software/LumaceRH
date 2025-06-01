@@ -49,7 +49,18 @@
                             <td>{{ incidencia.tipo_incidencia }}</td>
                             <td>{% if incidencia.observaciones %}{{ incidencia.observaciones }}{% else %}No se especificio un detalle{% endif %}</td>
                             <td>{{ incidencia.fecha }}</td>
-                            <td></td>
+                            <td class="">
+                                <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="estado" value="APROBADA">
+                                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-thumbs-up"></i></button>
+                                </form>
+                                <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="estado" value="RECHAZADA">
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-thumbs-down"></i></button>
+                                </form>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
