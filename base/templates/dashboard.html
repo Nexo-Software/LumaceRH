@@ -66,4 +66,16 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <!-- Ver empleados por sucursal (banner "ir a mi sucursal" -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card text-bg-secondary">
+                <div class="card-body text-center">
+                    <h2 class="card-title">Ver empleados por sucursal</h2>
+                    <a href="{% url 'empleado_sucursal_list' %}" class="btn btn-light"><i class="fa-solid fa-store"></i> Ir a mi sucursal</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

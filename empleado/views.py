@@ -2,6 +2,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.db.models import Q # Q para consultas complejas
+from django.shortcuts import get_object_or_404
 # Vistas
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
@@ -117,3 +118,27 @@ class EmpleadoSearchView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                 Q(postulante__usuario__first_name__icontains=query) | Q(postulante__usuario__last_name__icontains=query)
             )
         return EmpleadoModel.objects.none()
+# Empleados por sucursal
+class EmpleadoSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = EmpleadoModel
+    template_name = 'sucursal_empleados.html'
+    context_object_name = 'empleados'
+    permission_required = 'empleado.view_empleadomodel'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtener el usuario actual
+        user = self.request.user
+        # Obtener la sucursal del usuario
+        empleado_login = get_object_or_404(EmpleadoModel, postulante__usuario=user)
+        context['sucursal'] = empleado_login.sucursal
+        return context
+
+    def get_queryset(self):
+        # Obtener el usuario actual
+        user = self.request.user
+        # Obtener la sucursal del usuario
+        empleado_login = get_object_or_404(EmpleadoModel, postulante__usuario=user)
+        sucursal = empleado_login.sucursal
+        # Filtrar los empleados por la sucursal del usuario
+        return EmpleadoModel.objects.filter(sucursal=sucursal)

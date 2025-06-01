@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostulanteListView, PostulanteWizardView,NuevoUsuarioView,EmpleadoListView, EmpleadoWizardView, EmpleadoSearchView
+from .views import PostulanteListView, PostulanteWizardView,NuevoUsuarioView,EmpleadoListView, EmpleadoWizardView, EmpleadoSearchView, EmpleadoSucursalListView
 
 urlpatterns = [
     path('', PostulanteListView.as_view(), name='postulante_list'),  # Listar postulantes
@@ -9,4 +9,5 @@ urlpatterns = [
     path('empleados/', EmpleadoListView.as_view(), name='empleado_list'),
     path('empleado/create/', EmpleadoWizardView.as_view(), name='empleado_create'),
     path('buscar/', EmpleadoSearchView.as_view(), name='buscar_empleado'),
+    path('sucursal/', EmpleadoSucursalListView.as_view(), name='empleado_sucursal_list'),
 ]
