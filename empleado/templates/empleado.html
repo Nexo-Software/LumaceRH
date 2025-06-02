@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    {{ empleado.postulante.usuario.first_name }}
+{% endblock titulo %}
+
+{% block contenido %}
+    <div class="row">
+        <div>
+            <h1 class="display-4">
+                {{ empleado.postulante.usuario.first_name }} {{ empleado.postulante.usuario.last_name }}
+            </h1>
+        </div>
+        <div class="btn-group" role="group" aria-label="Acciones">
+            <button type="button" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-pen-to-square me-1"></i> Editar datos
+            </button>
+            <button type="button" class="btn btn-outline-primary">
+                <i class="fa-solid fa-clock-rotate-left me-1"></i> Historial
+            </button>
+            <button type="button" class="btn btn-outline-success">
+                <i class="fa-solid fa-file-invoice-dollar me-1"></i> Generar nómina
+            </button>
+        </div>
+    </div>
+{% endblock contenido %}

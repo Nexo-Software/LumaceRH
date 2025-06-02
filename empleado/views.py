@@ -142,3 +142,10 @@ class EmpleadoSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, List
         sucursal = empleado_login.sucursal
         # Filtrar los empleados por la sucursal del usuario
         return EmpleadoModel.objects.filter(sucursal=sucursal)
+
+# Detalle de empleado
+class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = EmpleadoModel # Modelo a utilizar
+    template_name = 'empleado.html' # Plantilla a utilizar
+    context_object_name = 'empleado'
+    permission_required = 'empleado.view_empleadomodel'
