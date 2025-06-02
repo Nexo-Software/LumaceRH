@@ -5,22 +5,70 @@
 {% endblock titulo %}
 
 {% block contenido %}
-    <div class="row">
-        <div>
+    <div class="row g-3">
+        <div class="col-12">
             <h1 class="display-4">
                 {{ empleado.postulante.usuario.first_name }} {{ empleado.postulante.usuario.last_name }}
             </h1>
+            <h4>
+                {{ empleado.puesto.nombre }}
+            </h4>
         </div>
-        <div class="btn-group" role="group" aria-label="Acciones">
+        <div class="btn-group col-12 mb-2" role="group" aria-label="Acciones">
             <button type="button" class="btn btn-outline-secondary">
-                <i class="fa-solid fa-pen-to-square me-1"></i> Editar datos
+                <i class="fa-solid fa-pen-to-square me-1"></i> Editar Datos
             </button>
             <button type="button" class="btn btn-outline-primary">
-                <i class="fa-solid fa-clock-rotate-left me-1"></i> Historial
+                <i class="fa-solid fa-clock-rotate-left me-1"></i> Todas Incidencias
             </button>
             <button type="button" class="btn btn-outline-success">
-                <i class="fa-solid fa-file-invoice-dollar me-1"></i> Generar nómina
+                <i class="fa-solid fa-file-invoice-dollar me-1"></i> Generar Nómina
             </button>
+        </div>
+        <!-- Nueva incidencia / Incidencias actuales -->
+        <div class="col-md-5">
+            <!-- Nueva incidencia -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Nueva Incidencia</h4>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <!-- Incidencias actuales -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Historial de Incidencias</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Tabla de incidencias -->
+                    <table class="table table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo de Incidencia</th>
+                            <th>Detalles</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for incidencia in incidencias%}
+                            <tr>
+                                <td>{{ incidencia.fecha }}</td>
+                                <td>{{ incidencia.tipo_incidencia }}</td>
+                                <td>{{ incidencia.observaciones|default:"No se especificó detalle" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4">No hay incidencias registradas.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock contenido %}

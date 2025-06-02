@@ -10,6 +10,7 @@ from formtools.wizard.views import SessionWizardView
 from .forms import PostulanteInfoForm, PostulanteDireccionForm, PostulantePuestoForm, PostulanteNotasForm, RegistroUsuarioForm, EmpleadoForm, EmpleadoPuestoForm, EmpleadoNotasForm
 # Modelos
 from .models import PostulanteModel, EmpleadoModel
+from incidencia.models import IncidenciasEmpleados
 from django.contrib.auth.models import User
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -149,3 +150,12 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
     template_name = 'empleado.html' # Plantilla a utilizar
     context_object_name = 'empleado'
     permission_required = 'empleado.view_empleadomodel'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtener el empleado actual
+        empleado = self.get_object()
+        # Obtener las incidencias del empleado
+        context['incidencias'] = IncidenciasEmpleados.objects.filter(empleado=empleado, estado_incidencia='PENDIENTE').order_by('-fecha')
+
+        return context
