@@ -77,7 +77,7 @@
                             <tr>
                                 <td>{{ incidencia.fecha }}</td>
                                 <td>{{ incidencia.tipo_incidencia }}</td>
-                                <td>{{ incidencia.observaciones|default:"No se especificó detalle" }}</td>
+                                <td>{{ incidencia.observaciones|default:"N/A" }}</td>
                                 <td class="">
                                     <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}"
                                           style="display: inline;">

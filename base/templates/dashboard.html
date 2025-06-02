@@ -33,6 +33,7 @@
         <div class="col-12">
             <h2 class="display-5">Últimas Incidencias</h2>
             <table class="table table-hover table-striped table-bordered text-center">
+                <caption>Mostrando 5 incidencias de {{ incidencias_count }}</caption>
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">Empleado</th>
@@ -51,22 +52,23 @@
                             </a>
                         </td>
                         <td>{{ incidencia.tipo_incidencia }}</td>
-                        <td>{% if incidencia.observaciones %}{{ incidencia.observaciones }}{% else %}No se especificioun
-                            detalle{% endif %}</td>
+                        <td>{% if incidencia.observaciones %}{{ incidencia.observaciones }}{% else %}N/A{% endif %}</td>
                         <td>{{ incidencia.fecha }}</td>
                         <td class="">
                             <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}"
                                   style="display: inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="estado" value="APROBADA">
-                                <button type="submit" class="btn btn-outline-success"><i class="fa-solid fa-thumbs-up"></i>
+                                <button type="submit" class="btn btn-outline-success"><i
+                                        class="fa-solid fa-thumbs-up"></i>
                                 </button>
                             </form>
                             <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}"
                                   style="display: inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="estado" value="RECHAZADA">
-                                <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-thumbs-down"></i>
+                                <button type="submit" class="btn btn-outline-danger"><i
+                                        class="fa-solid fa-thumbs-down"></i>
                                 </button>
                             </form>
                         </td>

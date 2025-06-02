@@ -9,21 +9,29 @@ services:
     restart: always
     networks:
       - rh-network
-  mysql:
-    image: mysql:latest
-    container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: edqnLMCSf31.
-      MYSQL_DATABASE: db-data
+      POSTGRES_DB: db_data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: edqnLMCSf31.
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_DB: db_data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: edqnLMCSf31.
     networks:
       - rh-network
     restart: always
     ports:
-      - 3307:3306
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
-  db_data:
+  postgres_data:
+
 networks:
   rh-network:
     driver: bridge
