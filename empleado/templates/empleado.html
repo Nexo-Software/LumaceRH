@@ -26,18 +26,36 @@
             </button>
         </div>
         <!-- Nueva incidencia / Incidencias actuales -->
-        <div class="col-md-5">
+        <div class="col-md-4">
             <!-- Nueva incidencia -->
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Nueva Incidencia</h4>
                 </div>
                 <div class="card-body">
-
+                    <!-- Formulario para registrar una nueva incidencia -->
+                    <!-- Tipo de incidencia -->
+                    <!-- Fecha -->
+                    <!-- Observaciones -->
+                    <!-- Botón para enviar -->
+                    <form method="post" action="{% url 'empleado_detail' empleado.id %}" class="row g-2">
+                        {% csrf_token %}
+                        <select class="form-select" aria-label="Default select example" name="tipo_incidencia" required>
+                            <option selected>Escoger una incidencia</option>
+                            {% for tipos_incidencia in tipos_incidencias %}
+                                <option value="{{ tipos_incidencia.id }}">{{ tipos_incidencia.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="date" class="form-control" name="fecha" required>
+                        <textarea class="form-control" name="observaciones" placeholder="Observaciones"></textarea>
+                        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-arrow-up-from-bracket"></i>
+                            Registrar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <!-- Incidencias actuales -->
             <div class="card">
                 <div class="card-header">
@@ -45,20 +63,39 @@
                 </div>
                 <div class="card-body">
                     <!-- Tabla de incidencias -->
-                    <table class="table table-hover table-striped">
+                    <table class="table table-hover table-striped table-bordered text-center">
                         <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Tipo de Incidencia</th>
                             <th>Detalles</th>
+                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for incidencia in incidencias%}
+                        {% for incidencia in incidencias %}
                             <tr>
                                 <td>{{ incidencia.fecha }}</td>
                                 <td>{{ incidencia.tipo_incidencia }}</td>
                                 <td>{{ incidencia.observaciones|default:"No se especificó detalle" }}</td>
+                                <td class="">
+                                    <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}"
+                                          style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="estado" value="APROBADA">
+                                        <button type="submit" class="btn btn-outline-success"><i
+                                                class="fa-solid fa-thumbs-up"></i>
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}"
+                                          style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="estado" value="RECHAZADA">
+                                        <button type="submit" class="btn btn-outline-danger"><i
+                                                class="fa-solid fa-thumbs-down"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         {% empty %}
                             <tr>

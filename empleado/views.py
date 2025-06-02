@@ -10,7 +10,7 @@ from formtools.wizard.views import SessionWizardView
 from .forms import PostulanteInfoForm, PostulanteDireccionForm, PostulantePuestoForm, PostulanteNotasForm, RegistroUsuarioForm, EmpleadoForm, EmpleadoPuestoForm, EmpleadoNotasForm
 # Modelos
 from .models import PostulanteModel, EmpleadoModel
-from incidencia.models import IncidenciasEmpleados
+from incidencia.models import IncidenciasEmpleados, TipoIncidenciasModel
 from django.contrib.auth.models import User
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -157,5 +157,32 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         empleado = self.get_object()
         # Obtener las incidencias del empleado
         context['incidencias'] = IncidenciasEmpleados.objects.filter(empleado=empleado, estado_incidencia='PENDIENTE').order_by('-fecha')
-
+        # Obtener los tipos de incidencias
+        context['tipos_incidencias'] = TipoIncidenciasModel.objects.all()
         return context
+    def post(self, request, *args, **kwargs):
+        # Recibir los datos del formulario
+        # Procesar la solicitud POST
+        tipo_incidencia_id = request.POST.get('tipo_incidencia')
+        fecha = request.POST.get('fecha')
+        observaciones = request.POST.get('observaciones')
+
+        # Guardar la incidencia
+        try:
+            empleado = self.get_object()
+            tipo_incidencia = get_object_or_404(TipoIncidenciasModel, id=tipo_incidencia_id)
+            incidencia = IncidenciasEmpleados.objects.create(
+                empleado=empleado,
+                tipo_incidencia=tipo_incidencia,
+                fecha=fecha,
+                observaciones=observaciones,
+                created_by=self.request.user,
+                updated_by=self.request.user
+            )
+            # Redirigir a la página de detalle del empleado
+            return HttpResponseRedirect(reverse_lazy('empleado_detail', kwargs={'pk': empleado.pk}))
+        except Exception as e:
+            # Manejar el error, por ejemplo, mostrar un mensaje de error
+            print(f"Error al crear la incidencia: {e}")
+            # Aquí podrías redirigir a una página de error o mostrar un mensaje en la misma página
+        return HttpResponseRedirect(reverse_lazy('empleado_detail', kwargs={'pk': self.get_object().pk}))
