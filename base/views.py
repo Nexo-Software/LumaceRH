@@ -1,5 +1,5 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from empleado.models import EmpleadoModel
 from incidencia.models import IncidenciasEmpleados
 # Create your views here.
@@ -13,5 +13,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['incidencias'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')[:5]
         return context
 
-class AppView(LoginRequiredMixin, TemplateView):
+class AppView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'apps.html'
+    # Permiso : ser administrador (superuser)
+    def test_func(self):
+        return self.request.user.is_superuser

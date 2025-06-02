@@ -2,15 +2,15 @@
 {% block titulo %}Buscar Empleado{% endblock %}
 
 {% block contenido %}
+    <h2 class="display-4 mt-4">Resultados de la búsqueda</h2>
     <div class="container mt-4">
         {% if empleados %}
-            <h2 class="mt-4">Resultados de la búsqueda</h2>
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Nombre Completo</th>
+                    <th>Sucursal</th>
                     <th>Correo Electrónico</th>
                 </tr>
                 </thead>
@@ -18,15 +18,17 @@
                 {% for empleado in empleados %}
                     <tr>
                         <td>{{ empleado.id }}</td>
-                        <td>{{ empleado.postulante.usuario.first_name }}</td>
-                        <td>{{ empleado.postulante.usuario.last_name }}</td>
+                        <td>{{ empleado.postulante.usuario.first_name }} {{ empleado.postulante.usuario.last_name }}</td>
+                        <td>{{ empleado.sucursal }}</td>
                         <td>{{ empleado.postulante.usuario.email }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>No se encontraron resultados para tu búsqueda.</p>
+            <div class="alert alert-warning" role="alert">
+                No se encontraron resultados.
+            </div>
         {% endif %}
     </div>
 {% endblock %}
