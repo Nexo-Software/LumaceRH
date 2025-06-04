@@ -15,9 +15,9 @@
             </h4>
         </div>
         <div class="btn-group col-12 mb-2" role="group" aria-label="Acciones">
-            <button type="button" class="btn btn-outline-secondary">
+            <a  href="{% url 'empleado_update' empleado.id %}" class="btn btn-outline-secondary">
                 <i class="fa-solid fa-pen-to-square me-1"></i> Editar Datos
-            </button>
+            </a>
             <button type="button" class="btn btn-outline-primary">
                 <i class="fa-solid fa-clock-rotate-left me-1"></i> Todas Incidencias
             </button>

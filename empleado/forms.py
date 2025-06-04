@@ -5,10 +5,10 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from crispy_forms.helper import FormHelper
 
 # Registro de Usuario
-class RegistroUsuarioForm(UserCreationForm):
+class RegistroUsuarioForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'email']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,6 +80,7 @@ class EmpleadoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        self.fields['postulante'].queryset = PostulanteModel.objects.filter(estado='Pendiente')
 
 class EmpleadoPuestoForm(forms.ModelForm):
     class Meta:

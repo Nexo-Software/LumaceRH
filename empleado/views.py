@@ -2,7 +2,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.db.models import Q # Q para consultas complejas
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 # Vistas
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
@@ -186,3 +186,26 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             print(f"Error al crear la incidencia: {e}")
             # Aquí podrías redirigir a una página de error o mostrar un mensaje en la misma página
         return HttpResponseRedirect(reverse_lazy('empleado_detail', kwargs={'pk': self.get_object().pk}))
+
+class EmpleadoUpdateWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
+    permission_required = 'empleado.change_empleadomodel'
+    template_name = 'empleado_wizard_form.html'
+    form_list = [
+        ('puesto', EmpleadoPuestoForm),
+        ('notas', EmpleadoNotasForm),
+    ]
+
+    def get_form_instance(self, step):
+        # Obtener el objeto desde la base de datos solo una vez
+        if not hasattr(self, 'empleado'):
+            self.empleado = EmpleadoModel.objects.get(pk=self.kwargs['pk'])
+        return self.empleado
+
+    def done(self, form_list, **kwargs):
+        # Guardar el objeto editado
+        empleado = self.get_form_instance(None)
+        for form in form_list:
+            for field, value in form.cleaned_data.items():
+                setattr(empleado, field, value)
+        empleado.save()
+        return redirect('empleado_detail', pk=empleado.pk)
