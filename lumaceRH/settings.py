@@ -98,7 +98,7 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'templates',  # Directory for custom templates
         ],
-        'APP_DIRS': False,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',

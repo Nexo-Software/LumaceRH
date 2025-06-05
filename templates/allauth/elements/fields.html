@@ -1,11 +1,1 @@
-{% for field in attrs.form %}
-  <div class="mb-3">
-    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-    {{ field }}
-    {% if field.errors %}
-      <div class="invalid-feedback d-block">
-        {{ field.errors|striptags }}
-      </div>
-    {% endif %}
-  </div>
-{% endfor %}
+{{ attrs.form.as_p }}

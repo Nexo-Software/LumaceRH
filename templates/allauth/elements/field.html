@@ -1,8 +1,5 @@
 {% load allauth %}
 {{ attrs.errors }}
-{% load django_bootstrap5 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
 <p>
     {% if attrs.type == "textarea" %}
         <label for="{{ attrs.id }}">
@@ -16,7 +13,7 @@
                   {% if attrs.checked %}checked{% endif %}
                   {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
                   {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
-                  {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}>{% slot value %}{% endslot %}</textarea>
+                  {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %} >{% slot value %}{% endslot %}</textarea>
     {% else %}
         {% if attrs.type != "checkbox" and attrs.type != "radio" %}
             <label for="{{ attrs.id }}">

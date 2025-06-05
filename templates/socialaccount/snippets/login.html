@@ -3,14 +3,11 @@
 {% load socialaccount %}
 {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
-    <div class="">
-        {% if not SOCIALACCOUNT_ONLY %}
-            <h2 class="display-6 mb-4 fs-2">
-                Otras opciones de inicio de sesión
-            </h2>
-        {% endif %}
-        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-        {% include "socialaccount/snippets/login_extra.html" %}
-    </div>
-
+    {% if not SOCIALACCOUNT_ONLY %}
+        {% element h2 %}
+            {% translate "Or use a third-party" %}
+        {% endelement %}
+    {% endif %}
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    {% include "socialaccount/snippets/login_extra.html" %}
 {% endif %}
