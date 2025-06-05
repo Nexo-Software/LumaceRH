@@ -1,0 +1,112 @@
+{% load i18n %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block head_title %}
+        {% endblock head_title %}
+    </title>
+    {% block extra_head %}
+    {% endblock extra_head %}
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body mb-2" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'dashboard' %}">Sistema RH</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                    {% url 'account_email' as email_url_ %}
+                    {% if email_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ email_url_ }}">{% trans "Change Email" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'account_change_password' as change_password_url_ %}
+                    {% if change_password_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ change_password_url_ }}">{% trans "Change Password" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'socialaccount_connections' as connections_url_ %}
+                    {% if connections_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ connections_url_ }}">{% trans "Account Connections" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'mfa_index' as mfa_url_ %}
+                    {% if mfa_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ mfa_url_ }}">{% trans "Two-Factor Authentication" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'usersessions_list' as usersessions_list_url_ %}
+                    {% if usersessions_list_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ usersessions_list_url_ }}">{% trans "Sessions" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'account_logout' as logout_url_ %}
+                    {% if logout_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ logout_url_ }}">{% trans "Sign Out" %}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    {% url 'account_login' as login_url_ %}
+                    {% if login_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ login_url_ }}">{% trans "Sign In" %}</a>
+                        </li>
+                    {% endif %}
+                    {% url 'account_signup' as signup_url_ %}
+                    {% if signup_url_ %}
+                        <li>
+                            <a class="nav-link active" aria-current="page"
+                               href="{{ signup_url_ }}">{% trans "Sign Up" %}</a>
+                        </li>
+                    {% endif %}
+
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-2">
+    {% block body %}
+        <!-- Menu de la pagina -->
+        <!-- Contenido de la pagina -->
+        {% block content %}
+        {% endblock content %}
+        <!-- Mensajes de la pagina -->
+        {% if messages %}
+            <div class="alert alert-primary" role="alert">
+                {% for message in messages %}{{ message }}{% endfor %}
+            </div>
+        {% endif %}
+    {% endblock body %}
+</div>
+
+{% block extra_body %}
+{% endblock extra_body %}
+</body>
+</html>
