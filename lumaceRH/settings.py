@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     'horario',
     'vacaciones'
 ]
-SITE_ID = 1
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -126,8 +126,6 @@ DATABASES = {
 DATABASES = {
     'default': dj_database_url.config(
         default=os.getenv('SERVERDB', 'sqlite:///db.sqlite3'),
-        conn_max_age=600,  # Connection reuse
-        ssl_require=False  # SSL is not required for SQLite
     )
 }
 
