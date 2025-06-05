@@ -25,6 +25,7 @@ def update_postulante_status(sender, instance, created, **kwargs):
         - Categoría: {instance.tipo_incidencia.categoria.nombre}
         - Descripción: {instance.tipo_incidencia.descripcion}
         - Sueldo base del empleado: {instance.empleado.contrato.salario_base}
+        - Horas de trabajo por turno: {instance.empleado.horas_trabajo}
 
         Instrucción:
         Calcula el monto a pagar por esta incidencia de forma precisa. Usa el sueldo base y la descripción como referencia.
