@@ -3,9 +3,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 # Modelos
 from .models import CategoriaIncidenciasModel, TipoIncidenciasModel, IncidenciasEmpleados
+from import_export.admin import ImportExportModelAdmin
 
 @admin.register(CategoriaIncidenciasModel)
-class CategoriaIncidenciasAdmin(ModelAdmin):
+class CategoriaIncidenciasAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_id_fields = ('id',)
     """Admin para la categoria de incidencias"""
     list_display = ('nombre', 'descripcion', 'codigo', 'efecto', 'status')
     search_fields = ('nombre',)
@@ -37,7 +39,8 @@ class CategoriaIncidenciasAdmin(ModelAdmin):
         super().save_model(request, obj, form, change)
 
 @admin.register(TipoIncidenciasModel)
-class TipoIncidenciasAdmin(ModelAdmin):
+class TipoIncidenciasAdmin(ModelAdmin,ImportExportModelAdmin):
+    import_id_fields = ('id',)
     """Admin para los tipos de incidencias"""
     list_display = ('nombre', 'descripcion', 'categoria',)
     search_fields = ('nombre',)
@@ -64,7 +67,8 @@ class TipoIncidenciasAdmin(ModelAdmin):
         super().save_model(request, obj, form, change)
 
 @admin.register(IncidenciasEmpleados)
-class IncidenciasEmpleadosAdmin(ModelAdmin):
+class IncidenciasEmpleadosAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_id_fields = ('id',)
     """Admin para las incidencias de los empleados"""
     def get_estado_display(self, obj):
         estados = {

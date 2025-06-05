@@ -32,7 +32,7 @@ class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, Li
     context_object_name = 'incidencias'
 
     def get_queryset(self):
-        return IncidenciasEmpleados.objects.all().order_by('-fecha')
+        return IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')[:10]  # Limitamos a las 10 últimas incidencias pendientes
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['incidencias_count'] = self.get_queryset().count()
