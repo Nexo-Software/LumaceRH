@@ -1,18 +1,33 @@
-{% load allauth socialaccount %}
+{% load allauth socialaccount static %} {# 'static' es útil si llegaras a usar SVGs locales o Bootstrap Icons lo requiere #}
 {% get_providers as socialaccount_providers %}
+
 {% if socialaccount_providers %}
-    {% element provider_list %}
-        {% for provider in socialaccount_providers %}
-            {% if provider.id == "openid" %}
-                {% for brand in provider.get_brands %}
-                    {% provider_login_url provider openid=brand.openid_url process=process as href %}
-                    {% element provider name=brand.name provider_id=provider.id href=href %}
-                    {% endelement %}
-                {% endfor %}
-            {% endif %}
+    {% for provider in socialaccount_providers %}
+        {% if provider.id == "google" %}
+            {# Proveedor de Google usando solo clases de Bootstrap #}
+            {% provider_login_url provider process=process scope=scope auth_params=auth_params as google_login_url %}
+            <a href="{{ google_login_url }}" class="btn btn-outline-danger">
+                <i class="fa-brands fa-google-plus-g"></i> Continuar con Google
+            </a>
+
+        {% elif provider.id == "openid" %}
+            {# Lógica para OpenID, usando estilos de Bootstrap #}
+            {% comment %}entramos al if (Mensaje de depuración, puedes quitarlo){% endcomment %}
+            {% for brand in provider.get_brands %}
+                {% provider_login_url provider openid=brand.openid_url process=process as href %}
+                <a href="{{ href }}" class="btn btn-outline-secondary d-inline-flex align-items-center mb-2">
+                    {{ brand.name }}
+                </a>
+            {% endfor %}
+
+        {% else %}
+            {# Otros proveedores, usando estilos de Bootstrap #}
             {% provider_login_url provider process=process scope=scope auth_params=auth_params as href %}
-            {% element provider name=provider.name provider_id=provider.id href=href %}
-            {% endelement %}
-        {% endfor %}
-    {% endelement %}
+             <a href="{{ href }}" class="btn btn-outline-secondary d-inline-flex align-items-center mb-2">
+                {{ provider.name }}
+            </a>
+        {% endif %}
+    {% endfor %}
 {% endif %}
+<script src="https://kit.fontawesome.com/f89f8ae43b.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

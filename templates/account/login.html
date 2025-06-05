@@ -1,6 +1,9 @@
 {% extends "account/base_entrance.html" %}
 {% load i18n %}
 {% load allauth account %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 {% block head_title %}
     {% trans "Sign In" %}
 {% endblock head_title %}
@@ -8,16 +11,10 @@
     {% element h1 %}
         {% trans "Sign In" %}
     {% endelement %}
+
+    <!-- Formulario de inicio de sesion basico -->
     {% if not SOCIALACCOUNT_ONLY %}
-        {% setvar link %}
-            <a href="{{ signup_url }}">
-            {% endsetvar %}
-            {% setvar end_link %}
-            </a>
-        {% endsetvar %}
-        {% element p %}
-            {% blocktranslate %}If you have not created an account yet, then please {{ link }}sign up{{ end_link }} first.{% endblocktranslate %}
-        {% endelement %}
+
         {% url 'account_login' as login_url %}
         {% element form form=form method="post" action=login_url tags="entrance,login" %}
             {% slot body %}
@@ -33,6 +30,8 @@
             {% endslot %}
         {% endelement %}
     {% endif %}
+
+    <!-- Esto no se muestra -->
     {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
         {% element hr %}
         {% endelement %}
@@ -49,9 +48,13 @@
             {% endif %}
         {% endelement %}
     {% endif %}
+
+
+    <!-- Cuenta de terceros -->
     {% if SOCIALACCOUNT_ENABLED %}
         {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
     {% endif %}
+
 {% endblock content %}
 {% block extra_body %}
     {{ block.super }}

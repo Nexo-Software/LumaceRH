@@ -1,6 +1,9 @@
 {% load allauth %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 <form method="{{ attrs.method }}"
-      {% if attrs.action %}action="{{ attrs.action }}"{% endif %}>
+      {% if attrs.action %}action="{{ attrs.action }}"{% endif %} class="">
     {% slot body %}
     {% endslot %}
     {% slot actions %}

@@ -1,5 +1,8 @@
 {% load allauth %}
 {{ attrs.errors }}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 <p>
     {% if attrs.type == "textarea" %}
         <label for="{{ attrs.id }}">
