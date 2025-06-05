@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3)v^3e6a+0ww#*@s)8vap*6__r)k6a7f$i3y+81z=)jd1c+mly'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -87,7 +87,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Allauth middleware
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+    # Whitenoise middleware for static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'lumaceRH.urls'
@@ -243,3 +245,25 @@ REST_FRAMEWORK = {
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://localhost:8000', 'https://rh.florcatorce.com', 'https://dev.lumace.cloud']
+
+# Whitenoise settings for static files in production
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    # Puedes añadir más directorios aquí si es necesario
+    # '/var/www/common_static_files/',
+]
+
+STATIC_ROOT = 'staticfiles'
+
+MEDIA_URL = '/media/'
+# MEDIA_ROOT es donde se guardarán los archivos subidos en el servidor.
+# Asegúrate de que el usuario con el que corre Gunicorn/Django tenga permisos de escritura aquí.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media_production')
+# O para un servidor de producción real:
+# MEDIA_ROOT = '/var/www/tu_proyecto/media/'
