@@ -2,6 +2,7 @@
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 # Modelos
 from .models import IncidenciasEmpleados
+from sucursal.models import SucursalModel
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Shortcuts
@@ -23,3 +24,18 @@ class EstadoIncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
             incidencia.estado_incidencia = estado
             incidencia.save()
         return redirect(request.META.get('HTTP_REFERER', reverse('dashboard')))
+
+class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = IncidenciasEmpleados
+    permission_required = 'incidencia.can_view_incidencias'
+    template_name = 'incidencias_general.html'
+    context_object_name = 'incidencias'
+
+    def get_queryset(self):
+        return IncidenciasEmpleados.objects.all().order_by('-fecha')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['incidencias_count'] = self.get_queryset().count()
+        context['sucursales'] = SucursalModel.objects.all()
+        context['col'] = int(12/len(context['sucursales']) if context['sucursales'] else 12)
+        return context

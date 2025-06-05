@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block titulo %}
+    Incidencias Generales
+{% endblock titulo %}
+
+{% block contenido %}
+    <h1 class="display-4">
+        Incidencias Generales
+    </h1>
+    {% include 'componentes/incidencias.html' with incidencias=incidencias %}
+{% endblock %}
