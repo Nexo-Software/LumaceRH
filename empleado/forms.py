@@ -8,7 +8,7 @@ from crispy_forms.helper import FormHelper
 class RegistroUsuarioForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -33,19 +33,23 @@ class NuevoUsuarioView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'user.add_postulante'
 
     def form_valid(self, form):
-        # Crear un username
-        username = form.cleaned_data['first_name'] + form.cleaned_data['last_name']
-        # Limpiar el username
-        username = username.replace(" ", "_")
-        # Comprobar si el username ya existe
-        if User.objects.filter(username=username).exists():
+        # Obtener el nombre sin espacios
+        first_name = form.cleaned_data['first_name']
+        no_spaces_name = first_name.replace(' ','')
+        # Obtener el apellido
+        last_name = form.cleaned_data['last_name']
+        no_spaces_last_name = last_name.replace(' ','')
+        fusion = no_spaces_name + no_spaces_last_name
+        # Validar disponibilidad
+        if User.objects.filter(username=fusion).exists():
             # Si existe, añadir un número al final
             i = 1
-            while User.objects.filter(username=username + str(i)).exists():
+            while User.objects.filter(username=fusion + str(i)).exists():
                 i += 1
-            username = username + str(i)
-        form.instance.username = username.lower()
-        
+            username = fusion + str(i)
+        form.instance.username = fusion.lower()
+        # Correo electronico : username@florcatorce.com
+        form.instance.email = f'{fusion.lower()}@florcatorce.com'
         # Guardar el usuario
         user = form.save(commit=False)
         user.is_active = False
