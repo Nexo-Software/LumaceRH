@@ -1,10 +1,12 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
+from import_export.admin import ImportExportModelAdmin
 # Register your models here.
 from .models import SucursalModel
 
 @admin.register(SucursalModel)
-class SucursalAdmin(ModelAdmin):
+class SucursalAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_id_fields = ('id',)
     """Admin para la sucursal"""
     list_display = ('empresa', 'nombre', 'direccion', 'telefono', 'email', 'status')
     list_editable = ('status',)

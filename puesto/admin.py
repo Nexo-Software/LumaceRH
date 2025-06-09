@@ -1,10 +1,12 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
+from import_export.admin import ImportExportModelAdmin
 # Register your models here.
 from .models import PuestoModel
 
 @admin.register(PuestoModel)
-class PuestoAdmin(ModelAdmin):
+class PuestoAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_id_fields = ('id',)
     """Admin para el puesto"""
     list_display = ('nombre', 'departamento', 'status')
     search_fields = ('nombre', 'departamento__nombre')

@@ -1,11 +1,13 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
+from import_export.admin import ImportExportModelAdmin
 # Register your models here.
 
 from .models import ContratoModel
 
 @admin.register(ContratoModel)
-class ContratoAdmin(ModelAdmin):
+class ContratoAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_id_fields = ('id',)
     """Admin para el contrato"""
     list_display = ('nombre', 'tipo_contrato', 'horas_trabajo', 'salario_base', 'fecha_inicio', 'fecha_fin', 'status')
     list_editable = ('status',)
