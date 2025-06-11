@@ -41,11 +41,10 @@ class NuevoUsuarioView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         no_spaces_last_name = last_name.replace(' ', '')
 
         fusion = no_spaces_name + no_spaces_last_name
-        username = fusion  # <-- CORRECCIÓN 1: Asignación inicial de username
+        username = fusion
 
-        # Validar disponibilidad y encontrar un nombre de usuario único
-        i = 1
-        while User.objects.filter(username=username).exists():
+        i = 1  # Contador para evitar duplicados
+        while User.objects.filter(username=username.lower()).exists():
             username = f"{fusion}{i}"
             i += 1
 
@@ -83,7 +82,7 @@ class PostulanteWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionW
         asociado = get_object_or_404(User, pk=pk_usuario)
 
         # Añadir los campos created_by y updated_by al diccionario form_data
-        form_data['usuario'] = asociado.id
+        form_data['usuario'] = asociado
         form_data['created_by'] = self.request.user
         form_data['updated_by'] = self.request.user
         PostulanteModel.objects.create(**form_data)
