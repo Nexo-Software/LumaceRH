@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\lmcer\GitHub\LumaceRH\db.sqlite3</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="db_rh@26.207.163.198" uuid="5ae25eb4-0f85-4256-adea-b3e71033b0df">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://26.207.163.198:5432/db_rh</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

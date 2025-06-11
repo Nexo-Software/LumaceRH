@@ -79,7 +79,7 @@ class PostulanteWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionW
             form_data.update(form.cleaned_data)
         pk_usuario = self.kwargs.get('usuario')
         # 404 user
-        asociado = get_object_or_404(User, pk=pk_usuario)
+        asociado = get_object_or_404(User, id=pk_usuario)
 
         # Añadir los campos created_by y updated_by al diccionario form_data
         form_data['usuario'] = asociado
