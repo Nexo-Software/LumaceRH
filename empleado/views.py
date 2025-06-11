@@ -35,32 +35,40 @@ class NuevoUsuarioView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         # Obtener el nombre sin espacios
         first_name = form.cleaned_data['first_name']
-        no_spaces_name = first_name.replace(' ','')
+        no_spaces_name = first_name.replace(' ', '')
         # Obtener el apellido
         last_name = form.cleaned_data['last_name']
-        no_spaces_last_name = last_name.replace(' ','')
+        no_spaces_last_name = last_name.replace(' ', '')
+
         fusion = no_spaces_name + no_spaces_last_name
-        # Validar disponibilidad
-        if User.objects.filter(username=fusion).exists():
-            # Si existe, añadir un número al final
-            i = 1
-            while User.objects.filter(username=fusion + str(i)).exists():
-                i += 1
-            username = fusion + str(i)
-        form.instance.username = fusion.lower()
-        # Correo electronico : username@florcatorce.com
-        form.instance.email = f'{fusion.lower()}@florcatorce.com'
+        username = fusion  # <-- CORRECCIÓN 1: Asignación inicial de username
+
+        # Validar disponibilidad y encontrar un nombre de usuario único
+        i = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{fusion}{i}"
+            i += 1
+
+        # Asignar el username y correo electrónico definitivos
+        form.instance.username = username.lower()
+        form.instance.email = f'{username.lower()}@florcatorce.com'
+
         # Guardar el usuario
         user = form.save(commit=False)
-        user.is_active = False
+        user.is_active = False  # El usuario se crea como inactivo
         user.save()
-        return super().form_valid(form)
+
+        # <-- CORRECIÓN 2: Ya no se necesita esta línea, es un error potencial
+        # new_user = User.objects.get(username=fusion)
+
+        # Redirigir al formulario de postulante con el ID del usuario recién creado
+        # Usamos el 'pk' (clave primaria) del objeto 'user' que acabamos de guardar
+        return redirect('postulante_create', usuario=user.pk)
 
 class PostulanteWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
     permission_required = 'empleado.add_postulante'
     template_name = 'postulante_wizard_form.html'
     form_list = [
-        ('info', PostulanteInfoForm),
         ('direccion', PostulanteDireccionForm),
         ('puesto', PostulantePuestoForm),
         ('notas', PostulanteNotasForm),
@@ -70,7 +78,12 @@ class PostulanteWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionW
         form_data = {}
         for form in form_list:
             form_data.update(form.cleaned_data)
+        pk_usuario = self.kwargs.get('usuario')
+        # 404 user
+        asociado = get_object_or_404(User, pk=pk_usuario)
+
         # Añadir los campos created_by y updated_by al diccionario form_data
+        form_data['usuario'] = asociado.id
         form_data['created_by'] = self.request.user
         form_data['updated_by'] = self.request.user
         PostulanteModel.objects.create(**form_data)

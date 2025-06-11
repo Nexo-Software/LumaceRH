@@ -14,6 +14,18 @@ class RegistroUsuarioForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        # Hacemos que el campo 'first_name' sea obligatorio.
+        # Esto le dirá a Django que no acepte el formulario si este campo está vacío.
+        self.fields['first_name'].required = True
+
+        # Hacemos lo mismo para el campo 'last_name'.
+        self.fields['last_name'].required = True
+
+        # También podemos cambiar las etiquetas (labels) si queremos que sean más descriptivas
+        self.fields['first_name'].label = "Nombre(s)"
+        self.fields['last_name'].label = "Apellido(s)"
+
+
 
 # Información de Postulante
 class PostulanteInfoForm(forms.ModelForm):
