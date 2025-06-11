@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.db.models import Q # Q para consultas complejas
 from django.shortcuts import get_object_or_404, redirect
+from django.db import transaction
 # Vistas
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from formtools.wizard.views import SessionWizardView
@@ -101,24 +102,68 @@ class EmpleadoListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     context_object_name = 'empleados'
     permission_required = 'empleado.view_empleadomodel'
 
+
 class EmpleadoWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
     permission_required = 'empleado.add_empleadomodel'
     template_name = 'empleado_wizard_form.html'
     form_list = [
         ('info', EmpleadoForm),
         ('puesto', EmpleadoPuestoForm),
-        ('notas', EmpleadoNotasForm),
+        # He eliminado 'notas' para simplificar el ejemplo, pero puedes mantenerlo.
+        # ('notas', EmpleadoNotasForm),
     ]
-    
+
+    def get_form_initial(self, step):
+        """
+        Datos inciales para el formulario del paso actual.
+        """
+        # Primero, obtenemos el diccionario inicial del comportamiento por defecto del wizard.
+        # Esto es crucial para evitar el bucle de recursión.
+        initial = super().get_form_initial(step)
+
+        # Solo si estamos en el paso 'puesto', intentamos obtener los datos del paso 'info'.
+        if step == 'puesto':
+            # Obtenemos los datos ya validados del paso anterior ('info')
+            prev_data = self.get_cleaned_data_for_step('info')
+
+            # Si existen datos y hay un 'postulante' en ellos...
+            if prev_data and 'postulante' in prev_data:
+                postulante = prev_data.get('postulante')
+                if postulante:
+                    # Actualizamos el diccionario 'initial' con los datos del postulante.
+                    initial.update({
+                        'puesto': postulante.puesto,
+                        'contrato': postulante.contrato
+                    })
+
+        # Devolvemos el diccionario 'initial', ya sea el original o el modificado.
+        return initial
+
+    @transaction.atomic  # Usamos una transacción para garantizar la integridad de los datos
     def done(self, form_list, **kwargs):
+        """
+        Este método se ejecuta cuando todos los formularios son válidos.
+        """
         form_data = {}
         for form in form_list:
             form_data.update(form.cleaned_data)
-        # Añadir los campos created_by y updated_by al diccionario form_data
+
+        # Obtenemos la instancia del postulante
+        postulante = form_data.get('postulante')
+
+        # Cambiamos el estado del postulante a 'Aceptado' y lo guardamos
+        if postulante:
+            postulante.estado = 'Aceptado'
+            postulante.save()
+
+        # Añadimos los campos de auditoría
         form_data['created_by'] = self.request.user
         form_data['updated_by'] = self.request.user
+
+        # Creamos el nuevo empleado con todos los datos recopilados
         EmpleadoModel.objects.create(**form_data)
-        # Redirigir a la lista de empleados
+
+        # Redirigimos a la lista de empleados
         return HttpResponseRedirect(reverse_lazy('empleado_list'))
 
 # Buscar empleado por Nombre

@@ -106,6 +106,10 @@ class EmpleadoPuestoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        # Campos obligatorios
+        self.fields['puesto'].required = True
+        self.fields['contrato'].required = True
+        self.fields['sucursal'].required = True
 
 class EmpleadoNotasForm(forms.ModelForm):
     class Meta:
