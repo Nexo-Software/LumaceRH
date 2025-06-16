@@ -232,7 +232,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
 # Registro con Email
 ACCOUNT_LOGIN_METHODS = ['email']
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 
 ACCOUNT_FORMS = {
     'signup': 'autenticacion.forms.CustomSignupForm',
@@ -242,13 +242,6 @@ ACCOUNT_FORMS = {
 LOGIN_REDIRECT_URL = 'dashboard' # URL a la que se redirige al usuario después de iniciar sesión
 LOGOUT_REDIRECT_URL = 'account_login' # URL a la que se redirige al usuario después de cerrar sesión
 LOGIN_URL = 'account_login'  # URL de inicio de sesión
-# Session settings
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 1 semana en segundos
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador
-# Session settings for Allauth
-ACCOUNT_SESSION_REMEMBER = True  # Recordar sesión si el usuario lo selecciona
-# CSRF settings
-CSRF_COOKIE_SECURE = True  # Habilitar cookies CSRF seguras en producción
 
 
 # API settings

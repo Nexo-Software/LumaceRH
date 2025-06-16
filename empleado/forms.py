@@ -93,6 +93,8 @@ class EmpleadoForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.fields['postulante'].queryset = PostulanteModel.objects.filter(estado='Pendiente')
+        # Como cambio el contenido del campo 'postulante' para que muestre el nombre del usuario asociado al postulante
+        self.fields['postulante'].label_from_instance = lambda obj: f"{obj.usuario.first_name} {obj.usuario.last_name} - {obj.puesto.nombre}" if obj.usuario else "Sin usuario asignado"
 
 class EmpleadoPuestoForm(forms.ModelForm):
     class Meta:
