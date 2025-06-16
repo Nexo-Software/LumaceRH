@@ -239,7 +239,7 @@ ACCOUNT_FORMS = {
     'login': 'autenticacion.forms.CustomLoginForm',
 }
 
-LOGIN_REDIRECT_URL = 'dashboard' # URL a la que se redirige al usuario después de iniciar sesión
+LOGIN_REDIRECT_URL = '/' # URL a la que se redirige al usuario después de iniciar sesión
 LOGOUT_REDIRECT_URL = 'account_login' # URL a la que se redirige al usuario después de cerrar sesión
 LOGIN_URL = 'account_login'  # URL de inicio de sesión
 
