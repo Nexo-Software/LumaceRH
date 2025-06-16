@@ -110,7 +110,7 @@ class EmpleadoWizardView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         ('info', EmpleadoForm),
         ('puesto', EmpleadoPuestoForm),
         # He eliminado 'notas' para simplificar el ejemplo, pero puedes mantenerlo.
-        # ('notas', EmpleadoNotasForm),
+        ('notas', EmpleadoNotasForm),
     ]
 
     def get_form_initial(self, step):
