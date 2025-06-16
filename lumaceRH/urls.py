@@ -21,7 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("unicorn/", include("django_unicorn.urls")),
     path('tinymce/', include('tinymce.urls')),
-    path('select2/', include('django_select2.urls')),
     # allauth
     path('accounts/', include('allauth.urls')),
     # Rest Framework
