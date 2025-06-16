@@ -23,6 +23,8 @@ urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
     # allauth
     path('accounts/', include('allauth.urls')),
+    # App de autenticación
+    path('cuenta/', include('autenticacion.urls')),
     # Rest Framework
     path('api-auth/', include('rest_framework.urls')),
     # Local apps

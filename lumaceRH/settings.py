@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3)v^3e6a+0ww#*@s)8vap*6__r)k6a7f$i3y+81z=)jd1c+mly'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -76,7 +76,8 @@ INSTALLED_APPS = [
     'incidencia',
     'nomina',
     'horario',
-    'vacaciones'
+    'vacaciones',
+    'autenticacion',
 ]
 
 MIDDLEWARE = [
@@ -233,7 +234,14 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 ACCOUNT_LOGIN_METHODS = ['email']
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
-LOGIN_REDIRECT_URL = '/'
+ACCOUNT_FORMS = {
+    'signup': 'autenticacion.forms.CustomSignupForm',
+    'login': 'autenticacion.forms.CustomLoginForm',
+}
+
+LOGIN_REDIRECT_URL = 'dashboard' # URL a la que se redirige al usuario después de iniciar sesión
+LOGOUT_REDIRECT_URL = 'account_login' # URL a la que se redirige al usuario después de cerrar sesión
+LOGIN_URL = 'account_login'  # URL de inicio de sesión
 
 # API settings
 REST_FRAMEWORK = {
