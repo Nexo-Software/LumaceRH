@@ -1,6 +1,8 @@
 # Imagen base de Python
 FROM python:3.13.3-bullseye
 
+ENV PYTHONUNBUFFERED=1
+
 # Establecer el directorio de trabajo
 WORKDIR /app
 
