@@ -3,7 +3,6 @@ from .models import PostulanteModel, EmpleadoModel
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from crispy_forms.helper import FormHelper
-from django_select2.forms import ModelSelect2Widget
 
 # Registro de Usuario
 class RegistroUsuarioForm(forms.ModelForm):
