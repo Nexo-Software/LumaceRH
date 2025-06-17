@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'horario',
     'vacaciones',
     'autenticacion',
+    "novedades.apps.NovedadesConfig"
 ]
 
 MIDDLEWARE = [

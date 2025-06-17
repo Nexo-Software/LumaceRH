@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block titulo %}
+    Actualización 1.6 - Nuevas Funcionalidades
+{% endblock titulo %}
+
+{% block contenido %}
+
+    <h1 class="display-4 mt-4">Actualización 1.6 - Nuevas Funcionalidades</h1>
+    <h3 class="display-6 fs-3">
+        ¡Presentamos la nueva versión de nuestro Sistema de RH: Más simple, más rápido y más inteligente!
+    </h3>
+    <hr>
+    <p>
+        Su experiencia gestionando talento está a punto de transformarse. Rediseñamos por completo nuestra plataforma
+        pensando en usted, y los resultados son extraordinarios:
+    </p>
+    <div class="row g-2 mt-2">
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title ">✅ ACELERACIÓN EXTREMA: 6X MÁS POTENCIA</h5>
+                </div>
+                <div class="card-body">
+                    <p>Optimizamos nuestro stack tecnológico con <strong>caché en memoria (Redis)</strong> y <strong>balanceo
+                        de carga</strong> para operaciones instantáneas. Disfrute de una velocidad revolucionaria en:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Reducción de latencia</strong>: Tiempos de respuesta optimizados mediante CDN y
+                            compresión Gzip
+                        </li>
+                        <li>
+                            <strong>Procesamiento batch</strong>: Ejecución paralela de nóminas con workers asíncronos
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title ">✨ Simple e intuitivo</h5>
+                    <ul>
+                        <li>
+                            Interfaz redesarrollada con <strong>componentes Jinja2</strong> reactivos
+                        </li>
+                        <li>
+                            Flujos de trabajo optimizados mediante <strong>API RESTful y Mixins</strong>
+                        </li>
+                        <li>
+                            <strong>UX/UI mejorado</strong> con acceso directo a funciones clave mediante hotkeys
+                        </li>
+                        <li>
+                            Implementación de <strong>Single Page Application (SPA)</strong> para una navegación fluida
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title ">🧠 Motorizado por IA</h5>
+                    <ul>
+                        <li>
+                            <strong>Modelos predictivos</strong> para análisis de rotación con Random Forest
+                        </li>
+                        <li>
+                            Automatización mediante <strong>RPA (Robotic Process Automation)</strong>
+                        </li>
+                        <li>
+                            <strong>Algoritmos de matching</strong> para contrataciones con NLP
+                        </li>
+                        <li>
+                            <strong>Procesamiento de lenguaje natural (NLP)</strong> para análisis de feedback
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title ">🔒 Seguridad Reforzada con Infraestructura Zero-Trust</h5>
+                    <p><strong>Protegemos tus datos con arquitectura de última generación:</strong></p>
+                    <ul>
+                        <li>
+                            <strong>Autenticación Federada</strong>: SSO mediante <strong>OpenID Connect</strong> con
+                            soporte para <strong>JWT (RFC 7519)</strong> y <strong>OAuth 2.0 (RFC 6749)</strong>
+                        </li>
+                        <li>
+                            <strong>Cifrado E2EE (End-to-End)</strong>: Implementación <strong>AES-256-GCM</strong> con
+                            gestión de claves mediante <strong>HSM (Hardware Security Module)</strong>
+                        </li>
+                        <li>
+                            <strong>Protección de Datos</strong>:
+                            <ul>
+                                <li><strong>Tokenización</strong> de información sensible</li>
+                                <li><strong>Masking dinámico</strong> basado en roles RBAC</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Seguridad Perimetral</strong>:
+                            <ul>
+                                <li>WAF (Web Application Firewall) con reglas OWASP Top 10</li>
+                                <li>DDoS mitigation mediante Cloudflare</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Auditoría Continua</strong>:
+                            <ul>
+                                <li>Logging centralizado con <strong>SIEM (Splunk)</strong></li>
+                                <li>Scans periódicos de vulnerabilidades (SAST/DAST)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

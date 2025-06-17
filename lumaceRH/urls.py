@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView  # Importa RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +29,7 @@ urlpatterns = [
     # Rest Framework
     path('api-auth/', include('rest_framework.urls')),
     # Local apps
-    path('', include('base.urls')),
+    path('base/', include('base.urls')),
     path('empresa/', include('empresa.urls')),
     path('sucursal/', include('sucursal.urls')),
     path('departamento/', include('departamento.urls')),
@@ -36,4 +37,5 @@ urlpatterns = [
     path('contrato/', include('contrato.urls')),
     path('personal/', include('empleado.urls')),
     path('incidencias/', include('incidencia.urls')),
+    path('', include('novedades.urls')),
 ]
