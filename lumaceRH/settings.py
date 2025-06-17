@@ -241,8 +241,9 @@ ACCOUNT_FORMS = {
 }
 
 LOGIN_REDIRECT_URL = 'dashboard' # URL a la que se redirige al usuario después de iniciar sesión
-LOGOUT_REDIRECT_URL = 'account_login' # URL a la que se redirige al usuario después de cerrar sesión
+LOGOUT_REDIRECT_URL = '' # URL a la que se redirige al usuario después de cerrar sesión
 LOGIN_URL = 'account_login'  # URL de inicio de sesión
+ACCOUNT_SIGNUP_URL = 'account_signup'  # URL de registro de cuenta
 
 
 # API settings
