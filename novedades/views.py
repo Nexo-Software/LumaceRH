@@ -14,3 +14,6 @@ class ActualizacionesView(TemplateView):
 
         # Si no está autenticado, muestra la plantilla normal
         return super().get(request, *args, **kwargs)
+
+class NovedadesView(TemplateView):
+    template_name = 'actualizacion1.6.html'
