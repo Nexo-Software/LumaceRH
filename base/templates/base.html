@@ -11,75 +11,7 @@
 </head>
 <body>
 {% csrf_token %}
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 shadow-sm">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'actualizaciones' %}">
-            {% if user.is_authenticated %}
-                {{ user.get_full_name }}
-            {% else %}
-                Grupo Flor Catorce
-            {% endif %}
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% if user.is_authenticated %}
-                    <li>
-                        <a class="nav-link" aria-current="page" href="{% url 'dashboard' %}"><i
-                                class="fa-solid fa-house"></i> Inicio</a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{% url 'incidencias-general-list' %}"><i
-                                class="fa-solid fa-clipboard-question"></i> Incidencias</a>
-                    </li>
-                    <li>
-                        <a class="nav-link disabled" aria-disabled="true" href="#"><i class="fa-solid fa-clock"></i>
-                            Horarios</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            <i class="fa-solid fa-gear"></i> Opciones
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/admin">Configuración</a></li>
-                            <li><a class="dropdown-item" href="{% url 'apps' %}">Apps</a></li>
-                            <li><a class="dropdown-item disabled" href="#">Reportes</a></li>
-                            <li><a class="dropdown-item" href="{% url 'actualizaciones' %}">Documentación</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a href='{% url 'account_logout' %}' class="dropdown-item" type="submit"><i
-                                    class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true"><i class="fa-solid fa-circle-user"></i> Mi
-                            perfil</a>
-                    </li>
-                {% endif %}
-            </ul>
-            {% if user.is_authenticated %}
-                <form class="d-flex" role="search" method="get" action="{% url 'buscar_empleado' %}">
-                    <input class="form-control me-2" type="search" placeholder="Buscar empleado" aria-label="Search"
-                           name="q" value="{{ request.GET.q }}">
-                    <button class="btn btn-outline-success" type="submit"><i
-                            class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
-            {% else %}
-                <div class="d-flex gap-2">
-                    <a href='{% url 'account_login' %}' class="btn btn-outline-success" type="submit">Iniciar sesión</a>
-                    <a class="btn btn-outline-secondary" aria-current="page" href='{% url 'account_signup' %}'>Registrarse</a>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</nav>
-
+{% include 'componentes/navbar.html' %}
 <div class="container mt-4">
     {% block contenido %}
 
