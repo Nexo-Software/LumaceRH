@@ -29,7 +29,7 @@ class PostulanteAdmin(ModelAdmin, ImportExportModelAdmin):
     # Actualiza list_display para usar el nuevo método en lugar del campo estado directamente
     list_display = ('usuario__first_name', 'puesto', 'contrato', 'direccion', 'get_estado_display')
     autocomplete_fields = ('usuario', 'puesto', 'contrato')
-    search_fields = ('usuario__username', 'puesto', 'contrato')
+    search_fields = ('usuario',)
     list_filter = ('estado',)
     readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by')
     fieldsets = (
