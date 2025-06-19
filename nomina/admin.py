@@ -3,12 +3,12 @@ from unfold.admin import ModelAdmin, TabularInline
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 # Register your models here.
-from .models import NomiaModel, IncidenciasEmpleados
+from .models import NominaModel, IncidenciasEmpleados
 # Importar - Exportar
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-@admin.register(NomiaModel)
+@admin.register(NominaModel)
 class NominaAdmin(ModelAdmin, ImportExportModelAdmin):
     """Admin para la nómina de empleados"""
     import_id_fields = ('id',)
@@ -65,7 +65,7 @@ class NominaAdmin(ModelAdmin, ImportExportModelAdmin):
     # Agrupación de campos en el formulario
     fieldsets = (
         ('Información básica', {
-            'fields': ('empleado', 'fecha_generacion', 'estado_nomina')
+            'fields': ('empleado', 'estado_nomina')
         }),
         ('Periodo de pago', {
             'fields': ('fecha_inicio', 'fecha_fin', 'fecha_pago')

@@ -4,7 +4,7 @@ from incidencia.models import IncidenciasEmpleados
 from empleado.models import EmpleadoModel
 # Create your models here.
 
-class NomiaModel(BaseModel):
+class NominaModel(BaseModel):
     empleado = models.ForeignKey(
         EmpleadoModel, 
         on_delete=models.PROTECT, 
@@ -20,7 +20,7 @@ class NomiaModel(BaseModel):
         null=True,
         blank=True
     )
-    fecha_generacion = models.DateField(verbose_name="Fecha de Generación", help_text="Fecha en la que se generó la nómina", null=False, blank=False)
+    fecha_generacion = models.DateField(verbose_name="Fecha de Generación", help_text="Fecha en la que se generó la nómina", null=False, blank=False, auto_now_add=True)
     # Datos de pago
     total_percepciones = models.DecimalField(
         max_digits=10, 

@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import NomiaModel
+from .models import NominaModel
 
 # IA
 from openai import OpenAI
@@ -9,7 +9,7 @@ import os
 load_dotenv()
 client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com")
 
-@receiver(post_save, sender=NomiaModel)
+@receiver(post_save, sender=NominaModel)
 def update_postulante_status(sender, instance, created, **kwargs):
     if created:  # Only run when a new record is created, not on updates
         print("Nomina creada con exito.")
@@ -31,7 +31,7 @@ def update_postulante_status(sender, instance, created, **kwargs):
         total_neto = total_percepciones - total_deducciones
         salario = total_neto + (instance.empleado.contrato.salario_base * 15)
         print(f'El salario de neto: {salario}')
-        NomiaModel.objects.filter(pk=instance.pk).update(
+        NominaModel.objects.filter(pk=instance.pk).update(
             total_percepciones=total_percepciones,
             total_deducciones=total_deducciones,
             total_neto=salario,
