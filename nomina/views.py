@@ -62,4 +62,8 @@ class NuevaNominaWizardView(LoginRequiredMixin, PermissionRequiredMixin, Session
         # Paso 5: Asignar incidencias usando .set() si existen
         if incidencias:
             nomina.incidencias.set(incidencias)
+        # Cambiar el estado de la nómina a 'GENERADA'
+        nomina.estado_nomina = 'GENERADA'
+        nomina.save()
+        # Redirigir a una vista de éxito o a la lista de nóminas
         return redirect('test_view')
