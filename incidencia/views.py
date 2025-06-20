@@ -16,7 +16,7 @@ from .forms import ObservacionesForm
 # Modificar incidencias
 class EstadoIncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = IncidenciasEmpleados
-    permission_required = 'incidencia.can_manage_incidencia'
+    permission_required = 'incidencia.change_incidenciasempleados'
     def post(self, request, *args, **kwargs):
         incidencia = get_object_or_404(IncidenciasEmpleados, pk=self.kwargs['pk']) # Obtener la incidencia por ID
         print(f'La incidencia es: {incidencia}')
@@ -30,7 +30,7 @@ class EstadoIncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
 
 class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = IncidenciasEmpleados
-    permission_required = 'incidencia.can_view_incidencias'
+    permission_required = 'incidencia.view_incidenciasempleados'
     template_name = 'incidencias_general.html'
     context_object_name = 'incidencias'
 
@@ -45,7 +45,7 @@ class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, Li
 
 class IncidenciasSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = IncidenciasEmpleados
-    permission_required = 'incidencia.can_view_incidencias'
+    permission_required = 'incidencia.view_incidenciasempleados'
     template_name = 'incidencias_sucursal.html'
     context_object_name = 'incidencias'
     # Contexto adicional para la plantilla
@@ -66,6 +66,6 @@ class IncidenciasSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, L
 class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = IncidenciasEmpleados
     template_name = 'editar_incidencia.html'
-    permission_required = 'incidencia.can_manage_incidencia'
+    permission_required = 'incidencia.change_incidenciasempleados'
     form_class = ObservacionesForm
     success_url = reverse_lazy('incidencias-general-list') # regresar a la lista de incidencias generales

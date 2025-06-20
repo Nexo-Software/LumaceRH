@@ -258,7 +258,7 @@ REST_FRAMEWORK = {
 }
 
 # CSRF settings
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://localhost:8000', 'https://rh.florcatorce.com', 'https://dev.lumace.cloud']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://localhost:8000', 'https://rh.florcatorce.com']
 
 # Whitenoise settings for static files in production
 STORAGES = {
