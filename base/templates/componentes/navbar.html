@@ -59,8 +59,8 @@
                 </form>
             {% else %}
                 <div class="d-flex gap-2">
-                    <a href='{% url 'account_login' %}' class="btn btn-outline-success" type="submit">Iniciar sesión</a>
-                    <a class="btn btn-outline-secondary" aria-current="page" href='{% url 'account_signup' %}'>Registrarse</a>
+                    <a href='{% url 'account_login' %}' class="btn btn-primary" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                    <a class="btn btn-secondary" aria-current="page" href='{% url 'account_signup' %}'><i class="fa-solid fa-user-plus"></i> Registrarse</a>
                 </div>
             {% endif %}
         </div>
