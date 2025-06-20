@@ -1,5 +1,6 @@
 # Vistas
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
+from django.views.generic.edit import UpdateView
 # Modelos
 from .models import IncidenciasEmpleados
 from sucursal.models import SucursalModel
@@ -7,7 +8,9 @@ from sucursal.models import SucursalModel
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Shortcuts
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse , reverse_lazy
+# Formularios
+from .forms import ObservacionesForm
 # Create your views here.
 
 # Modificar incidencias
@@ -59,3 +62,16 @@ class IncidenciasSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, L
             empleado__sucursal_id=sucursal_id,
             estado_incidencia='PENDIENTE'
         ).order_by('-fecha')[:10]  # Limitamos a las 10 últimas incidencias pendientes
+
+class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = IncidenciasEmpleados
+    template_name = 'editar_incidencia.html'
+    permission_required = 'incidencia.can_manage_incidencia'
+    form_class = ObservacionesForm
+    success_url = reverse_lazy('incidencias-general-list') # regresar a la lista de incidencias generales
+
+    #Pasar la informacion de la incidencia al formulario
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()  # Obtener la instancia de la incidencia
+        return kwargs

@@ -15,7 +15,7 @@
             </h4>
         </div>
         <div class="btn-group col-12 mb-2" role="group" aria-label="Acciones">
-            <a  href="{% url 'empleado_update' empleado.id %}" class="btn btn-outline-secondary">
+            <a href="{% url 'empleado_update' empleado.id %}" class="btn btn-outline-secondary">
                 <i class="fa-solid fa-pen-to-square me-1"></i> Editar Datos
             </a>
             <button type="button" class="btn btn-outline-primary">
@@ -79,22 +79,27 @@
                                 <td>{{ incidencia.tipo_incidencia }}</td>
                                 <td>{{ incidencia.observaciones|default:"N/A" }}</td>
                                 <td class="">
-                                    <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}"
-                                          style="display: inline;">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="estado" value="APROBADA">
-                                        <button type="submit" class="btn btn-outline-success"><i
-                                                class="fa-solid fa-thumbs-up"></i>
-                                        </button>
-                                    </form>
-                                    <form method="post" action="{% url 'estado-incidencia-update' incidencia.id %}"
-                                          style="display: inline;">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="estado" value="RECHAZADA">
-                                        <button type="submit" class="btn btn-outline-danger"><i
-                                                class="fa-solid fa-thumbs-down"></i>
-                                        </button>
-                                    </form>
+                                    <div class="d-flex gap-2 justify-content-center">  <!-- Contenedor flex con espacio entre elementos -->
+                                        <form method="post"
+                                              action="{% url 'estado-incidencia-update' incidencia.id %}"
+                                              class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="estado" value="APROBADA">
+                                            <button type="submit" class="btn btn-outline-success">
+                                                <i class="fa-solid fa-thumbs-up"></i>
+                                            </button>
+                                        </form>
+                                        <form method="post"
+                                              action="{% url 'estado-incidencia-update' incidencia.id %}"
+                                              class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="estado" value="RECHAZADA">
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="fa-solid fa-thumbs-down"></i>
+                                            </button>
+                                        </form>
+                                        <a href="{% url 'incidencia-update' incidencia.id %}" class="d-inline btn btn-outline-warning"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}

@@ -27,7 +27,7 @@
                 <td>{% if incidencia.observaciones %}{{ incidencia.observaciones }}{% else %}N/A{% endif %}</td>
                 <td>{{ incidencia.fecha }}</td>
                 <td class="">
-                    <div class="d-flex gap-2">  <!-- Contenedor flex con espacio entre elementos -->
+                    <div class="d-flex gap-2 justify-content-center">  <!-- Contenedor flex con espacio entre elementos -->
                         <form method="post"
                               action="{% url 'estado-incidencia-update' incidencia.id %}"
                               class="d-inline">
