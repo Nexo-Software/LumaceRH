@@ -39,3 +39,22 @@ class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, Li
         context['sucursales'] = SucursalModel.objects.all()
         context['col'] = int(12/len(context['sucursales']) if context['sucursales'] else 12)
         return context
+
+class IncidenciasSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = IncidenciasEmpleados
+    permission_required = 'incidencia.can_view_incidencias'
+    template_name = 'incidencias_sucursal.html'
+    context_object_name = 'incidencias'
+    # Contexto adicional para la plantilla
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sucursal'] = get_object_or_404(SucursalModel, pk=self.kwargs['pk'])
+        context['incidencias_count'] = self.get_queryset().count()
+        return context
+    # Obtener los empleados de una sucursal específica y de ellos, buscamos sus incidencias
+    def get_queryset(self):
+        sucursal_id = self.kwargs.get('pk')
+        return IncidenciasEmpleados.objects.filter(
+            empleado__sucursal_id=sucursal_id,
+            estado_incidencia='PENDIENTE'
+        ).order_by('-fecha')[:10]  # Limitamos a las 10 últimas incidencias pendientes

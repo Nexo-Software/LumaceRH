@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Incidencias en {{ sucursal.nombre }}
+{% endblock titulo %}
+
+{% block contenido %}
+    <h1 class="display-4">
+        Incidencias en {{ sucursal.nombre }}
+    </h1>
+    {% include 'componentes/incidencias.html' with incidencias=incidencias incidencias_count=incidencias_count %}
+{% endblock contenido %}
