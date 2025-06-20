@@ -21,9 +21,9 @@
             <button type="button" class="btn btn-outline-primary">
                 <i class="fa-solid fa-clock-rotate-left me-1"></i> Todas Incidencias
             </button>
-            <button type="button" class="btn btn-outline-success">
+            <a href="{% url 'nomina_empleado_view' empleado.id %}" class="btn btn-outline-success">
                 <i class="fa-solid fa-file-invoice-dollar me-1"></i> Generar Nómina
-            </button>
+            </a>
         </div>
         <!-- Nueva incidencia / Incidencias actuales -->
         <div class="col-md-4">

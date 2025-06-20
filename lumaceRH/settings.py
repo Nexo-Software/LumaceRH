@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'formtools',
     'tinymce',
     'import_export',
+    'django.contrib.postgres',
     # Allauth
     'allauth',
     'allauth.account',

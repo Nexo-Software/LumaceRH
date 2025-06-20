@@ -1,7 +1,7 @@
 # Django
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.db.models import Q # Q para consultas complejas
+from django.db.models import Q, CharField # Q para consultas complejas
 from django.shortcuts import get_object_or_404, redirect
 from django.db import transaction
 # Vistas
@@ -15,6 +15,12 @@ from incidencia.models import IncidenciasEmpleados, TipoIncidenciasModel
 from django.contrib.auth.models import User
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+# Postgres
+from django.contrib.postgres.lookups import Unaccent
+
+# Registrar búsqueda insensible a acentos (en tu modelo o al inicio de la app)
+CharField.register_lookup(Unaccent)
+
 
 class PostulanteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = PostulanteModel # Modelo a utilizar
@@ -177,7 +183,7 @@ class EmpleadoSearchView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         query = self.request.GET.get('q')
         if query:
             return EmpleadoModel.objects.filter(
-                Q(postulante__usuario__first_name__icontains=query) | Q(postulante__usuario__last_name__icontains=query)
+                Q(postulante__usuario__first_name__unaccent__icontains=query) | Q(postulante__usuario__last_name__unaccent__icontains=query)
             )
         return EmpleadoModel.objects.none()
 # Empleados por sucursal
