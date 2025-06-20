@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 shadow-sm">
+<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 shadow-sm sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="">
             {% if user.is_authenticated %}
@@ -32,10 +32,10 @@
                             <i class="fa-solid fa-gear"></i> Opciones
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/admin">Panel de Administración</a></li>
-                            <li><a class="dropdown-item" href="{% url 'apps' %}">Módulos</a></li>
-                            <li><a class="dropdown-item disabled" href="#">Reportes</a></li>
-                            <li><a class="dropdown-item" href="{% url 'novedades' %}">Novedades</a></li>
+                            <li><a class="dropdown-item" href="/admin"><i class="fa-solid fa-screwdriver-wrench"></i> Panel de Administración</a></li>
+                            <li><a class="dropdown-item" href="{% url 'apps' %}"><i class="fa-solid fa-shapes"></i> Módulos</a></li>
+                            <li><a class="dropdown-item disabled" href="#"><i class="fa-solid fa-print"></i> Reportes</a></li>
+                            <li><a class="dropdown-item" href="{% url 'novedades' %}"><i class="fa-solid fa-newspaper"></i> Novedades</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

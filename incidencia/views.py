@@ -69,9 +69,3 @@ class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     permission_required = 'incidencia.can_manage_incidencia'
     form_class = ObservacionesForm
     success_url = reverse_lazy('incidencias-general-list') # regresar a la lista de incidencias generales
-
-    #Pasar la informacion de la incidencia al formulario
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.get_object()  # Obtener la instancia de la incidencia
-        return kwargs
