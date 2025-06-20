@@ -1,0 +1,7 @@
+<div class="btn-group mb-3" role="group" aria-label="Sucursales">
+    <a href="{% url 'incidencias-general-list' %}" class="btn btn-outline-primary">Todas</a>
+    {% for sucursal in sucursales %}
+        <a href="{% url 'incidencias-sucursal-list' sucursal.id %}"
+           class="btn btn-outline-primary">{{ sucursal.nombre }}</a>
+    {% endfor %}
+</div>

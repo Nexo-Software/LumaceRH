@@ -8,5 +8,6 @@
     <h1 class="display-4">
         Incidencias en {{ sucursal.nombre }}
     </h1>
+    {% include 'componentes/filtro_sucursales.html' with sucursales=sucursales %}
     {% include 'componentes/incidencias.html' with incidencias=incidencias incidencias_count=incidencias_count %}
 {% endblock contenido %}

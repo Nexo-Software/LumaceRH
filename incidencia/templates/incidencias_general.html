@@ -7,17 +7,6 @@
     <h1 class="display-4">
         Todas las incidencias
     </h1>
+    {% include 'componentes/filtro_sucursales.html' with sucursales=sucursales %}
     {% include 'componentes/incidencias.html' with incidencias=incidencias %}
-
-    <div class="row g-4">
-        {% for sucursal in sucursales %}
-            <div class="col-md-{{ col }}">
-                <div class="card">
-                    <div class="card-body">
-                        <a href="{% url 'incidencias-sucursal-list' sucursal.id %}"><h4 class="card-title">Incidencias en {{ sucursal.nombre }}</h4></a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
 {% endblock %}

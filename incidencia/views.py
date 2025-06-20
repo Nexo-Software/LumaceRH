@@ -48,6 +48,7 @@ class IncidenciasSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, L
     # Contexto adicional para la plantilla
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['sucursales'] = SucursalModel.objects.all()
         context['sucursal'] = get_object_or_404(SucursalModel, pk=self.kwargs['pk'])
         context['incidencias_count'] = self.get_queryset().count()
         return context
