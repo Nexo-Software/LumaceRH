@@ -8,6 +8,7 @@
     <h1 class="display-4">Editar Incidencia</h1>
     <form method="post">
         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
         {{ form|crispy }} {# Renderiza el formulario con crispy #}
         <button type="submit" class="btn btn-success mt-3"><i class="fa-solid fa-floppy-disk"></i> Actualizar</button>
     </form>

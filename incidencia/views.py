@@ -55,7 +55,10 @@ class EstadoIncdenciasGeneralUpdateView(LoginRequiredMixin, PermissionRequiredMi
             for incidencia in incidencias:
                 incidencia.estado_incidencia = 'RECHAZADA'
                 incidencia.save()  # ¡Activa la señal post_save!
-
+        url = request.POST.get('next')
+        if url:
+            return redirect(url)
+        # Si no se especifica una URL, redirige al dashboard
         return redirect('dashboard')
 
 
