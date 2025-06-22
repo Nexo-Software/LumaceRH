@@ -7,6 +7,8 @@ from .forms import EmpleadoNominaForm, IncidenciasNominaForm, FechasPagoNominaFo
 from .models import NominaModel
 from django.shortcuts import redirect, get_object_or_404
 from empleado.models import EmpleadoModel
+# mensajes de django
+from django.contrib import messages
 
 
 # Create your views here.
@@ -75,14 +77,15 @@ class NuevaNominaWizardView(LoginRequiredMixin, PermissionRequiredMixin, Session
         return redirect('test_view')
 
 
-class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    template_name = 'test.html'
+class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWizardView):
+    template_name = 'nueva_nomina_wizard.html'
     model = NominaModel
     permission_required = 'nomina.add_empleadomodel'
-    form_class = FechasPagoNominaForm
+    form_list = [
+        ('fechas_pago', FechasPagoNominaForm),
+    ]
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def done(self, form_list, **kwargs):
         pk = self.kwargs.get('pk')
         empleado = get_object_or_404(EmpleadoModel, pk=pk)
         # Incidencias del empleado (incidencias aceptadas)
@@ -105,10 +108,29 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
         contrato = empleado.contrato.salario_base * 15
         salario = contrato + total_neto
         print(f'Salario Base: {contrato} - Total Neto: {total_neto} - Salario Final: {salario}')
-        return context
-
-    def form_valid(self, form):
-        """
-        Método para procesar el formulario y crear una nueva nómina.
-        """
-
+        formulario = {}
+        for form in form_list:
+            formulario.update(form.cleaned_data)
+        # Campos de auditoria
+        formulario['created_by'] = self.request.user
+        formulario['updated_by'] = self.request.user
+        # Crear la nómina con los datos del formulario
+        nomina = NominaModel.objects.create(
+            empleado=empleado,
+            total_percepciones=total_add,
+            total_deducciones=total_sub,
+            total_neto=total_neto,
+            **formulario
+        )
+        # Asignar incidencias a la nómina (many-to-many)
+        if incidencias:
+            nomina.incidencias.set(incidencias)
+        # Guardar la nómina
+        try:
+            nomina.save()
+            messages.success(self.request, 'Nómina guardada exitosamente.')
+        except Exception as e:
+            print(f'Error al guardar la nómina: {e}')
+            messages.error(self.request, 'Error al guardar la nómina. Por favor, inténtelo de nuevo.')
+        # Redirigir a una vista de éxito o a la lista de nóminas
+        return redirect('test_view')
