@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
+from django.views.generic.edit import UpdateView
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .forms import EmpleadoNominaForm, IncidenciasNominaForm, FechasPagoNominaForm
 from .models import NominaModel
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from empleado.models import EmpleadoModel
 
 
@@ -74,54 +75,40 @@ class NuevaNominaWizardView(LoginRequiredMixin, PermissionRequiredMixin, Session
         return redirect('test_view')
 
 
-class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
-    template_name = 'nueva_nomina_wizard.html'
-    form_list = [
-        ('fechas_pago', FechasPagoNominaForm),
-        ('incidencias', IncidenciasNominaForm),
-    ]
-    permission_required = 'nomina.add_nomiamodel'
+class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    template_name = 'test.html'
+    model = NominaModel
+    permission_required = 'nomina.add_empleadomodel'
+    form_class = FechasPagoNominaForm
 
-    def get_form_instance(self, step):
-        # Obtener el objeto desde la base de datos solo una vez
-        if not hasattr(self, 'empleado'):
-            self.empleado = EmpleadoModel.objects.get(pk=self.kwargs['pk'])
-        return self.empleado
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        empleado = get_object_or_404(EmpleadoModel, pk=pk)
+        # Incidencias del empleado (incidencias aceptadas)
+        incidencias = empleado.incidencias_empleado.filter(estado_incidencia='APROBADA')
+        print(f'Empleado: {empleado.postulante.usuario.get_full_name()} - ID: {empleado.id}')
+        total_add = 0
+        total_sub = 0
+        for incidencia in incidencias:
+            if incidencia.tipo_incidencia.categoria.efecto == 'ADD':
+                print(
+                    f'Incidencia: {incidencia.tipo_incidencia.nombre} - Fecha: {incidencia.fecha} - Estado: {incidencia.estado_incidencia} - Monto: {incidencia.monto} - Tipo: {incidencia.tipo_incidencia.categoria.nombre}')
+                total_add += incidencia.monto if incidencia.tipo_incidencia.categoria.efecto == 'ADD' else 0
+            elif incidencia.tipo_incidencia.categoria.efecto == 'SUB':
+                print(
+                    f'Incidencia: {incidencia.tipo_incidencia.nombre} - Fecha: {incidencia.fecha} - Estado: {incidencia.estado_incidencia} - Monto: {incidencia.monto} - Tipo: {incidencia.tipo_incidencia.categoria.nombre}')
+                total_sub += incidencia.monto if incidencia.tipo_incidencia.categoria.efecto == 'SUB' else 0
+        print(f'Total Percepciones: {total_add} - Total Deducciones: {total_sub}')
+        # Calcular el total neto
+        total_neto = total_add - total_sub
+        contrato = empleado.contrato.salario_base * 15
+        salario = contrato + total_neto
+        print(f'Salario Base: {contrato} - Total Neto: {total_neto} - Salario Final: {salario}')
+        return context
 
-    def get_form_kwargs(self, step=None):
-        kwargs = super().get_form_kwargs(step)
+    def form_valid(self, form):
+        """
+        Método para procesar el formulario y crear una nueva nómina.
+        """
 
-        # Solo para el paso de incidencias
-        if step == 'incidencias':
-            # Obtener datos del paso 'empleado'
-            empleado_data = self.get_cleaned_data_for_step('empleado')
-            if empleado_data:
-                empleado = empleado_data.get('empleado')
-                kwargs['empleado'] = empleado
-        return kwargs
-
-    def done(self, form_list, **kwargs):
-        formulario = {}
-        incidencias = None
-        for form in form_list:
-            formulario.update(form.cleaned_data)
-            if 'incidencias' in form.cleaned_data:
-                incidencias = form.cleaned_data['incidencias']
-        # Paso 2: Eliminar el campo 'incidencias' del diccionario principal
-        if 'incidencias' in formulario:
-            del formulario['incidencias']
-        # Campos de auditoria
-        formulario['created_by'] = self.request.user
-        formulario['updated_by'] = self.request.user
-        # Crear la nómina con los datos del formulario
-        # Paso 4: Crear la instancia de NominaModel SIN las incidencias
-        nomina = NominaModel.objects.create(**formulario)
-
-        # Paso 5: Asignar incidencias usando .set() si existen
-        if incidencias:
-            nomina.incidencias.set(incidencias)
-        # Cambiar el estado de la nómina a 'GENERADA'
-        nomina.estado_nomina = 'GENERADA'
-        nomina.save()
-        # Redirigir a una vista de éxito o a la lista de nóminas
-        return redirect('test_view')

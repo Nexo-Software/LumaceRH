@@ -108,5 +108,21 @@ class IncidenciasEmpleadosAdmin(ModelAdmin, ImportExportModelAdmin):
             incidencia.save()
         self.message_user(request, "Incidencias aprobadas correctamente.")
     aceptar_incidencia.short_description = "Aceptar incidencias seleccionadas"
+
+    def rechazar_incidencia(self, request, queryset):
+        """Rechazar incidencias seleccionadas."""
+        for incidencia in queryset:
+            incidencia.estado_incidencia = 'RECHAZADA'
+            incidencia.save()
+        self.message_user(request, "Incidencias rechazadas correctamente.")
+    rechazar_incidencia.short_description = "Rechazar incidencias seleccionadas"
+
+    def cambiar_incidencia(self, request, queryset):
+        """Cambiar el estado de las incidencias seleccionadas."""
+        for incidencia in queryset:
+            incidencia.estado_incidencia = 'PENDIENTE'
+            incidencia.save()
+        self.message_user(request, "Incidencias cambiadas a pendiente correctamente.")
+    cambiar_incidencia.short_description = "Cambiar incidencias seleccionadas a pendiente"
     # Acciones personalizadas
-    actions = ['aceptar_incidencia']
+    actions = ['aceptar_incidencia', 'rechazar_incidencia', 'cambiar_incidencia']
