@@ -17,3 +17,6 @@ class ActualizacionesView(TemplateView):
 
 class NovedadesView(TemplateView):
     template_name = 'actualizacion1.6.html'
+
+class NovedadesView2(TemplateView):
+    template_name = 'actualizacion1.7.html'
