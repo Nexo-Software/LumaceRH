@@ -104,5 +104,8 @@ class IncidenciasEmpleados(BaseModel):
         verbose_name = "Incidencia de Empleado"
         verbose_name_plural = "Incidencias de Empleados"
         db_table = "incidencias_empleados"
+        permissions = [
+            ("editar_incidencias", "Puede editar el concepto de incidencias"),
+        ]
     def __str__(self):
         return f"{self.empleado} - {self.tipo_incidencia} - {self.fecha}"

@@ -66,6 +66,6 @@ class IncidenciasSucursalListView(LoginRequiredMixin, PermissionRequiredMixin, L
 class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = IncidenciasEmpleados
     template_name = 'editar_incidencia.html'
-    permission_required = 'incidencia.change_incidenciasempleados'
+    permission_required = 'incidencia.editar_incidencias'
     form_class = ObservacionesForm
     success_url = reverse_lazy('incidencias-general-list') # regresar a la lista de incidencias generales
