@@ -119,7 +119,7 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
             empleado=empleado,
             total_percepciones=total_add,
             total_deducciones=total_sub,
-            total_neto=total_neto,
+            total_neto=salario,
             **formulario
         )
         # Asignar incidencias a la nómina (many-to-many)
