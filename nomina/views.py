@@ -7,6 +7,7 @@ from .forms import EmpleadoNominaForm, IncidenciasNominaForm, FechasPagoNominaFo
 from .models import NominaModel
 from django.shortcuts import redirect, get_object_or_404
 from empleado.models import EmpleadoModel
+import datetime
 # mensajes de django
 from django.contrib import messages
 
@@ -132,7 +133,8 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         if incidencias:
             nomina.incidencias.set(incidencias)
         # Buscar nomina con la misma fecha de generacion y empleado
-        nomina_existente = NominaModel.objects.filter(empleado=empleado, fecha_generacion=formulario['fecha_generacion']).first()
+        fecha_actual = datetime.date.today()
+        nomina_existente = NominaModel.objects.filter(empleado=empleado, fecha_generacion=fecha_actual).first()
         if nomina_existente:
             messages.warning(self.request, 'Ya existe una nómina generada para este empleado en esta fecha.')
             return redirect('recibo_nomina_view', pk=empleado.id)
