@@ -96,6 +96,10 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         pk = self.kwargs.get('pk')
         empleado = get_object_or_404(EmpleadoModel, pk=pk)
         # Incidencias del empleado (incidencias aceptadas y que esten dentro del rango de fechas)
+        # Nuscar si hay incidencias pendientes del empleado (si las hay no se puede generar la nómina)
+        if empleado.incidencias_empleado.filter(estado_incidencia='PENDIENTE', fecha__range=(fecha_inicio,fecha_fin)).exists():
+            messages.error(self.request, 'El empleado tiene incidencias pendientes. No se puede generar la nómina.')
+            return redirect('empleado_detail', pk=empleado.id)
         incidencias = empleado.incidencias_empleado.filter(estado_incidencia='APROBADA', fecha__range=(fecha_inicio, fecha_fin))
         print(f'Empleado: {empleado.postulante.usuario.get_full_name()} - ID: {empleado.id}')
         total_add = 0
