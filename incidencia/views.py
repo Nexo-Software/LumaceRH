@@ -67,10 +67,9 @@ class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, Li
     permission_required = 'incidencia.view_incidenciasempleados'
     template_name = 'incidencias_general.html'
     context_object_name = 'incidencias'
-
+    paginate_by = 10
     def get_queryset(self):
-        return IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')[
-               :10]  # Limitamos a las 10 últimas incidencias pendientes
+        return IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
