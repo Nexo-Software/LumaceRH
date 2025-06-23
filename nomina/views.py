@@ -86,10 +86,16 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
     ]
 
     def done(self, form_list, **kwargs):
+        formulario = {}
+        for form in form_list:
+            formulario.update(form.cleaned_data)
+        # fecha de inicio y fin
+        fecha_inicio = formulario.get('fecha_inicio')
+        fecha_fin = formulario.get('fecha_fin')
         pk = self.kwargs.get('pk')
         empleado = get_object_or_404(EmpleadoModel, pk=pk)
-        # Incidencias del empleado (incidencias aceptadas)
-        incidencias = empleado.incidencias_empleado.filter(estado_incidencia='APROBADA')
+        # Incidencias del empleado (incidencias aceptadas y que esten dentro del rango de fechas)
+        incidencias = empleado.incidencias_empleado.filter(estado_incidencia='APROBADA', fecha__range=(fecha_inicio, fecha_fin))
         print(f'Empleado: {empleado.postulante.usuario.get_full_name()} - ID: {empleado.id}')
         total_add = 0
         total_sub = 0
@@ -125,7 +131,7 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         # Asignar incidencias a la nómina (many-to-many)
         if incidencias:
             nomina.incidencias.set(incidencias)
-        # Guardar la nómina
+        # Guardar la nómina (no pueden existir nóminas duplicadas para el mismo empleado en el mismo periodo)
         try:
             nomina.save()
             messages.success(self.request, 'Nómina guardada exitosamente.')
