@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block titulo %}
+    Recibo de Nómina
+{% endblock titulo %}
+
+{% block contenido %}
+    <h2 class="display-5">Recibo de nomina de </h2>
+    <h2 class="display-3">{{ empleado.postulante.usuario.get_full_name }}</h2>
+    <div class="p-3">
+        <hr>
+    </div>
+    <div class="row g-2 text-center">
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="fw-2">Fecha de inicio</h4>
+                    <p class="display-6">{{ nomina.fecha_inicio|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="fw-2">Fecha de finalización</h4>
+                    <p class="display-6">{{ nomina.fecha_fin|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="fw-2">Fecha de pago</h4>
+                    <p class="display-6">{{ nomina.fecha_pago|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-success" role="alert">
+                <p><strong>Total persepciones: </strong> ${{ nomina.total_percepciones }}</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="alert alert-danger" role="alert">
+                <p><strong>Total deducciones: </strong> ${{ nomina.total_deducciones }}</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="alert alert-primary" role="alert">
+                <p><strong>Salario Final: </strong> ${{ nomina.total_neto }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}

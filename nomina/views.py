@@ -139,4 +139,20 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
             print(f'Error al guardar la nómina: {e}')
             messages.error(self.request, 'Error al guardar la nómina. Por favor, inténtelo de nuevo.')
         # Redirigir a una vista de éxito o a la lista de nóminas
-        return redirect('test_view')
+        return redirect('recibo_nomina_view', pk=empleado.id) # redirigir a la vista del recibo de nómina del empleado (ultima nomina)
+
+class ReciboNominaView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView): #Obtener la ultima nómina del empleado
+    """
+    Vista para generar un recibo de nómina.
+    """
+    template_name = 'recibo_nomina.html'
+    permission_required = 'nomina.view_nomiamodel'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        empleado = get_object_or_404(EmpleadoModel, pk=pk)
+        context['empleado'] = empleado
+        nomina = NominaModel.objects.filter(empleado=empleado).latest('fecha_generacion')
+        context['nomina'] = nomina
+        return context
