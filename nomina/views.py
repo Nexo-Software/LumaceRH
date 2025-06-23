@@ -131,7 +131,12 @@ class NominaEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, SessionWiz
         # Asignar incidencias a la nómina (many-to-many)
         if incidencias:
             nomina.incidencias.set(incidencias)
-        # Guardar la nómina (no pueden existir nóminas duplicadas para el mismo empleado en el mismo periodo)
+        # Buscar nomina con la misma fecha de generacion y empleado
+        nomina_existente = NominaModel.objects.filter(empleado=empleado, fecha_generacion=formulario['fecha_generacion']).first()
+        if nomina_existente:
+            messages.warning(self.request, 'Ya existe una nómina generada para este empleado en esta fecha.')
+            return redirect('recibo_nomina_view', pk=empleado.id)
+        # Si la nomina no existe, se guarda la nueva nómina
         try:
             nomina.save()
             messages.success(self.request, 'Nómina guardada exitosamente.')
