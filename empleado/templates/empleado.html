@@ -18,9 +18,9 @@
             <a href="{% url 'empleado_update' empleado.id %}" class="btn btn-outline-secondary">
                 <i class="fa-solid fa-pen-to-square me-1"></i> Editar Datos
             </a>
-            <button type="button" class="btn btn-outline-primary">
+            <a href="{% url 'incidencias-empleado-view' empleado.id %}" type="button" class="btn btn-outline-primary">
                 <i class="fa-solid fa-clock-rotate-left me-1"></i> Todas Incidencias
-            </button>
+            </a>
             <a href="{% url 'nomina_empleado_view' empleado.id %}" class="btn btn-outline-success">
                 <i class="fa-solid fa-file-invoice-dollar me-1"></i> Generar Nómina
             </a>

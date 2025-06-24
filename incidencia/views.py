@@ -6,6 +6,7 @@ from pyexpat.errors import messages
 # Modelos
 from .models import IncidenciasEmpleados
 from sucursal.models import SucursalModel
+from empleado.models import EmpleadoModel
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Shortcuts
@@ -108,3 +109,19 @@ class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     permission_required = 'incidencia.editar_incidencias'
     form_class = ObservacionesForm
     success_url = reverse_lazy('incidencias-general-list')  # regresar a la lista de incidencias generales
+
+class IncidencasEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = IncidenciasEmpleados
+    permission_required = 'incidencia.view_incidenciasempleados'
+    template_name = 'historial_incidencias.html'
+    context_object_name = 'incidencias'
+    def get_queryset(self):
+        empleado_id = self.kwargs.get('pk')
+        empleado = get_object_or_404(EmpleadoModel, id=empleado_id)
+        print(f'El empleado es: {empleado}')
+        return IncidenciasEmpleados.objects.filter(empleado=empleado)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['empleado'] = get_object_or_404(EmpleadoModel, id=self.kwargs['pk'])
+        return context
