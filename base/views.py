@@ -45,6 +45,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['incidencias_count'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').count()
         context['incidencias'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')[:5]
         context['logged_in_users'] = usuarios.count()
+        # Auditoria
+        print(f'El usuario {self.request.user.get_full_name()} ha accedido al dashboard a las {timezone.now()}')
         return context
 
 class AppView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
