@@ -13,16 +13,28 @@
                     <th scope="col">Fecha</th>
                     <th scope="col">Tipo de Incidencia</th>
                     <th scope="col">Observaciones</th>
+                    <th scope="col">Estado</th>
                     <th scope="col">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for incidencia in incidencias %}
-                    <tr class="{% if incidencia.estado_incidencia == 'RECHAZADA' %}table-danger{% elif incidencia.estado_incidencia == 'APROBADA' %}table-success{% endif %}">
+                    <tr>
                         <td>{{ incidencia.fecha }}</td>
                         <td>{{ incidencia.tipo_incidencia.nombre }}</td>
                         <td>{% if incidencia.observaciones %} {{ incidencia.observaciones }} {% else %}
                             N/A{% endif %}</td>
+                        <td>
+                            {% if incidencia.estado_incidencia == 'PENDIENTE' %}
+                                <span class="badge bg-secondary"><i class="fa-solid fa-hourglass-end"></i> En espera</span>
+                            {% elif incidencia.estado_incidencia == 'APROBADA' %}
+                                <span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Aceptada</span>
+                            {% elif incidencia.estado_incidencia == 'RECHAZADA' %}
+                                <span class="badge bg-danger"><i class="fa-solid fa-circle-minus"></i> Rechazada</span>
+                            {% else %}
+                                <span class="badge bg-warning">Desconocido</span>
+                            {% endif %}
+                        </td>
                         <td class="table-dark">
                             <div class="d-flex gap-2 justify-content-center">
                                 <!-- Contenedor flex con espacio entre elementos -->
