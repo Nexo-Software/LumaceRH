@@ -1,12 +1,11 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin
 # Register your models here.
 from .models import EmpleadoModel, PostulanteModel
 
 @admin.register(PostulanteModel)
-class PostulanteAdmin(ModelAdmin, ImportExportModelAdmin):
+class PostulanteAdmin(ImportExportModelAdmin):
     import_id_fields = ('id',)
     def get_estado_display(self, obj):
         """Muestra el estado del postulante con formato visual."""
@@ -56,7 +55,7 @@ class PostulanteAdmin(ModelAdmin, ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
         
 @admin.register(EmpleadoModel)
-class EmpleadoAdmin(ModelAdmin, ImportExportModelAdmin):
+class EmpleadoAdmin(ImportExportModelAdmin):
     import_id_fields = ('id',)
     list_display = ('postulante', 'puesto', 'contrato', 'get_sueldo', 'sucursal', 'status')
     list_filter = ('status', 'puesto', 'sucursal')

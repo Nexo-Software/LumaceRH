@@ -1,12 +1,12 @@
-from unfold.admin import ModelAdmin, TabularInline
 from django.contrib import admin
+
 from django.utils.html import format_html
 # Modelos
 from .models import CategoriaIncidenciasModel, TipoIncidenciasModel, IncidenciasEmpleados
 from import_export.admin import ImportExportModelAdmin
 
 @admin.register(CategoriaIncidenciasModel)
-class CategoriaIncidenciasAdmin(ModelAdmin, ImportExportModelAdmin):
+class CategoriaIncidenciasAdmin(ImportExportModelAdmin):
     import_id_fields = ('id',)
     """Admin para la categoria de incidencias"""
     list_display = ('nombre', 'descripcion', 'codigo', 'efecto', 'status')
@@ -39,7 +39,7 @@ class CategoriaIncidenciasAdmin(ModelAdmin, ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 @admin.register(TipoIncidenciasModel)
-class TipoIncidenciasAdmin(ModelAdmin,ImportExportModelAdmin):
+class TipoIncidenciasAdmin(ImportExportModelAdmin):
     import_id_fields = ('id',)
     """Admin para los tipos de incidencias"""
     list_display = ('nombre', 'descripcion', 'categoria',)
@@ -67,7 +67,7 @@ class TipoIncidenciasAdmin(ModelAdmin,ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 @admin.register(IncidenciasEmpleados)
-class IncidenciasEmpleadosAdmin(ModelAdmin, ImportExportModelAdmin):
+class IncidenciasEmpleadosAdmin(ImportExportModelAdmin):
     import_id_fields = ('id',)
     """Admin para las incidencias de los empleados"""
     def get_estado_display(self, obj):

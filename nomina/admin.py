@@ -1,5 +1,5 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin, TabularInline
+from django.contrib.admin import TabularInline
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 # Register your models here.
@@ -9,7 +9,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
 @admin.register(NominaModel)
-class NominaAdmin(ModelAdmin, ImportExportModelAdmin):
+class NominaAdmin(ImportExportModelAdmin):
     """Admin para la nómina de empleados"""
     import_id_fields = ('id',)
     def get_estado_display(self, obj):

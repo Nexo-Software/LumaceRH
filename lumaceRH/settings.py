@@ -14,11 +14,11 @@ from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -32,18 +32,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    # Unfold Django Admin
-    "unfold",  # before django.contrib.admin
-    "unfold.contrib.filters",  # optional, if special filters are needed
-    "unfold.contrib.forms",  # optional, if special form elements are needed
-    "unfold.contrib.inlines",  # optional, if special inlines are needed
-    "unfold.contrib.import_export",  # optional, if django-import-export package is used
-    "unfold.contrib.guardian",  # optional, if django-guardian package is used
-    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,7 +66,7 @@ INSTALLED_APPS = [
     'sucursal',
     'departamento',
     'puesto',
-    'contrato', # Pendiente
+    'contrato',  # Pendiente
     'empleado',
     'incidencia',
     'nomina',
@@ -118,7 +111,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lumaceRH.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -135,7 +127,6 @@ DATABASES = {
         default=os.getenv('SERVERDB', 'sqlite:///db.sqlite3'),
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -155,7 +146,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -166,7 +156,6 @@ TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -198,7 +187,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-"google": {
+    "google": {
         "APPS": [
             {
                 "client_id": os.getenv('GOOGLE_ID'),
@@ -242,11 +231,10 @@ ACCOUNT_FORMS = {
     'login': 'autenticacion.forms.CustomLoginForm',
 }
 
-LOGIN_REDIRECT_URL = 'dashboard' # URL a la que se redirige al usuario después de iniciar sesión
-LOGOUT_REDIRECT_URL = '' # URL a la que se redirige al usuario después de cerrar sesión
+LOGIN_REDIRECT_URL = 'dashboard'  # URL a la que se redirige al usuario después de iniciar sesión
+LOGOUT_REDIRECT_URL = ''  # URL a la que se redirige al usuario después de cerrar sesión
 LOGIN_URL = 'account_login'  # URL de inicio de sesión
 ACCOUNT_SIGNUP_URL = 'account_signup'  # URL de registro de cuenta
-
 
 # API settings
 REST_FRAMEWORK = {
@@ -281,3 +269,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_production')
 # O para un servidor de producción real:
 # MEDIA_ROOT = '/var/www/tu_proyecto/media/'
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
+SILENCED_SYSTEM_CHECKS = ["security.W019"]

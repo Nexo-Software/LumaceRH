@@ -1,11 +1,11 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin, TabularInline
+from django.contrib.admin import ModelAdmin, TabularInline
 from django.utils.html import format_html
 # Register your models here.
 from .models import TurnosModel, SemanaModel, ProgramacionDiariaModel, AsignacionEmpleadoModel
 
 @admin.register(TurnosModel)
-class TurnosAdmin(ModelAdmin):
+class TurnosAdmin(admin.ModelAdmin):
     """Admin para los turnos de trabajo"""
     list_display = ('nombre', 'hora_inicio', 'hora_fin', 'sucursal', 'status')
     list_editable = ('status',)

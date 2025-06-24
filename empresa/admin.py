@@ -1,12 +1,11 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 # Register your models here.
 from .models import EmpresaModel
 from django.core.mail import send_mail
 
 @admin.register(EmpresaModel)
-class EmpresaAdmin(ModelAdmin, ImportExportModelAdmin):
+class EmpresaAdmin(ImportExportModelAdmin):
     import_id_fields = ('id',)
     """Admin para la empresa"""
     list_display = ('razon_social', 'nombre_comercial', 'direccion', 'status')
