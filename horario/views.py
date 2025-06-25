@@ -22,7 +22,7 @@ class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListV
                 hora_fin__gte=mi_hora
             )
         except TurnosModel.DoesNotExist:
-            messages.error(self.request, "No hay turnos programados para la hora actual.")
+            messages.error(self.request, f'No hay turnos programados para la hora actual. ({mi_hora})')
             return ProgramacionDiariaModel.objects.none()
         # Obtener la sucursal con el pk
         sucursal = get_object_or_404(SucursalModel, pk=self.kwargs['pk'])

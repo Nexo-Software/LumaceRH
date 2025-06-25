@@ -1,13 +1,15 @@
 <div class="table-responsive mt-4">
     <table class="table table-hover table-striped table-bordered text-center">
+        <caption>Si necesitas ayuda, por favor lee la guía de iconos.</caption>
         <thead>
-            <tr>
-                <th>Nombre Completo</th>
-                <th>Puesto</th>
-            </tr>
+        <tr>
+            <th>Nombre Completo</th>
+            <th>Puesto</th>
+            <th>Tipo de asistencia</th>
+        </tr>
         </thead>
         <tbody>
-            {% for empleado in empleados %}
+        {% for empleado in empleados %}
             <tr>
                 <td>
                     <a href="{% url 'empleado_detail' empleado.id %}" class="text-decoration-none">
@@ -15,8 +17,25 @@
                     </a>
                 </td>
                 <td>{{ empleado.puesto.nombre }}</td>
+                <td>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="" class="btn btn-outline-success disabled">
+                            <i class="fa-solid fa-check"></i>
+                        </a>
+                        <a href="" class="btn btn-outline-danger disabled">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                        <a href="" class="btn btn-outline-warning disabled">
+                            <i class="fa-solid fa-hourglass"></i>
+                        </a>
+                    </div>
+                </td>
             </tr>
-            {% endfor %}
+        {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">No hay empleados asignados a este turno.</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>

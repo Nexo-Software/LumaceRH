@@ -51,7 +51,7 @@
             <div class="card text-bg-secondary">
                 <div class="card-body text-center">
                     <h2 class="card-title">Turno en {{ empleado.sucursal.nombre }} <span class="badge text-bg-danger">¡Nuevo!</span></h2>
-                    <a href="{% url 'empleados_turnos_list' empleado.sucursal.id%}" class="btn btn-light"><i class="fa-solid fa-people-group"></i>
+                    <a href="{% url 'empleados_turnos_list' empleado.sucursal.id%}" class="btn btn-light"><i class="fa-solid fa-clock"></i>
                         Ir a mi horario</a>
                     <a href="{% url 'empleado_sucursal_list' %}" class="btn btn-light disabled"><i class="fa-solid fa-eye"></i>
                         Otros horarios</a>
