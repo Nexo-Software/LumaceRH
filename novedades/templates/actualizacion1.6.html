@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block titulo %}
-    Actualización 1.6 - Nuevas Funcionalidades
+    1.6 - Incidencias Rápidas
 {% endblock titulo %}
 
 {% block contenido %}
-    <h2 class="display-4 mt-4">Actualización 1.6 - Nuevas Funcionalidades</h2>
+    <h2 class="display-4 mt-4">Actualización 1.6 - Incidencias Rápidas</h2>
     <h3 class="display-6 fs-3">
         ¡Presentamos la nueva versión de nuestro Sistema de RH: Más simple, más rápido y más inteligente!
     </h3>
@@ -13,21 +13,20 @@
         Su experiencia gestionando talento está a punto de transformarse. Rediseñamos por completo nuestra plataforma
         pensando en usted, y los resultados son extraordinarios:
     </p>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Novedad visual:</strong> Disfruta de mayor comodidad ocular con nuestro nuevo modo oscuro.
-        Actívalo en tus ajustes del sistema.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
 
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>¡Novedad en incidencias!</strong> Ahora puedes editar los mensajes de observaciones después de
-        enviarlos. También puedes filtrar las incidencias por sucursal desde el menú de navegación.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>¡Búsqueda mejorada!</strong> Ahora encuentras empleados por nombre, apellido o completo, incluso sin
-        usar acentos.
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-calendar-event me-3 fs-2"></i>
+            <div>
+                <h5 class="alert-heading mb-2">¡Próxima Capacitación: Gestión de Horarios!</h5>
+                <p class="mb-0">
+                    <span class="d-block mb-1">📅 <strong>Primeros pasos:</strong> Aprenderás a:</span>
+                    <span class="d-block">✓ Subir horarios al sistema</span>
+                    <span class="d-block">✓ Consultar tu plantilla en tiempo real</span>
+                    <span class="d-block mt-2">🔜 <em>Sesiones comenzando pronto</em></span>
+                </p>
+            </div>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
@@ -38,18 +37,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>¡Edición de incidencias habilitada!</strong> Gerentes ahora tienen acceso a esta función con el permiso
-        <code>editar_incidencias</code>.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>¡Novedad: Gestión masiva de incidencias!</strong> Ahora puedes aceptar o rechazar múltiples incidencias
-        simultáneamente.
-        <span class="d-block mt-1">Simplemente selecciónalas y usa el botón <span class="badge bg-light text-dark">Aceptar incidencias</span> o <span class="badge bg-light text-dark">Rechazar incidencias</span>.</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-warning" aria-current="true">Parches y correcciones de la 1.5</li>
+        <li class="list-group-item">Disfruta de mayor comodidad ocular con nuestro nuevo modo oscuro</li>
+        <li class="list-group-item">Puedes editar los mensajes de observaciones después de enviarlos.</li>
+        <li class="list-group-item">Ahora encuentras empleados por nombre, apellido o nombre completo, incluso sin usar
+            acentos.
+        </li>
+        <li class="list-group-item">Puedes aceptar o rechazar múltiples incidencias simultáneamente.</li>
+    </ul>
 
     <div class="row g-2 mt-2">
 
@@ -161,7 +157,9 @@
         </div>
 
         <ul class="list-group">
-            <li class="list-group-item active" aria-current="true">Nuevas Integraciones de la versión 1.6</li>
+            <li class="list-group-item list-group-item-primary" aria-current="true">Nuevas Integraciones de la versión
+                1.6
+            </li>
             <li class="list-group-item">Panel de adminsitración</li>
             <li class="list-group-item">Compatibilidad con el ecosistema de Excel</li>
             <li class="list-group-item">Seguimiento y perfiles de postulantes</li>
@@ -171,7 +169,7 @@
             <li class="list-group-item">Mejoras en la gestión de horarios</li>
         </ul>
 
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-info" role="alert">
             Sino tienes una cuenta, puedes solicitarla a un administrador del sistema.
         </div>
     </div>

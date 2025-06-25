@@ -1,8 +1,8 @@
 # Vistas
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
 from django.views.generic.edit import UpdateView
-from pyexpat.errors import messages
-
+# Mensajes
+from django.contrib import messages
 # Modelos
 from .models import IncidenciasEmpleados
 from sucursal.models import SucursalModel
@@ -43,7 +43,10 @@ class EstadoIncdenciasGeneralUpdateView(LoginRequiredMixin, PermissionRequiredMi
     def post(self, request, *args, **kwargs):
         incidencias_ids = request.POST.getlist('lista_incidencias')
         accion = request.POST.get('accion')
-
+        # Valida que se haya seleccionado al menos una incidencia
+        if not incidencias_ids:
+            messages.error(request, 'Debe seleccionar al menos una incidencia.')
+            return redirect(request.META.get('HTTP_REFERER', reverse('dashboard')))
         # Obtener todas las incidencias en una sola consulta
         incidencias = IncidenciasEmpleados.objects.filter(id__in=incidencias_ids)
 

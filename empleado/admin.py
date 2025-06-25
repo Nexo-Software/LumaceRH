@@ -28,7 +28,7 @@ class PostulanteAdmin(ImportExportModelAdmin):
     # Actualiza list_display para usar el nuevo método en lugar del campo estado directamente
     list_display = ('usuario__first_name', 'puesto', 'contrato', 'direccion', 'get_estado_display')
     autocomplete_fields = ('usuario', 'puesto', 'contrato')
-    search_fields = ('usuario',)
+    search_fields = ('usuario__first_name', 'usuario__last_name')
     list_filter = ('estado',)
     readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by')
     fieldsets = (
@@ -60,7 +60,10 @@ class EmpleadoAdmin(ImportExportModelAdmin):
     list_display = ('postulante', 'puesto', 'contrato', 'get_sueldo', 'sucursal', 'status')
     list_filter = ('status', 'puesto', 'sucursal')
     list_editable = ('status',)
-    search_fields = ('postulante__usuario__username', 'puesto', 'contrato')
+    search_fields = (
+        'postulante__usuario__first_name',  # Buscar por primer del usuario
+        'postulante__usuario__last_name', # Buscar por apellido del usuario
+    )
     autocomplete_fields = ('postulante', 'puesto', 'contrato', 'sucursal')
     fieldsets = (
         ('Información del empleado', {

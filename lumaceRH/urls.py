@@ -38,5 +38,6 @@ urlpatterns = [
     path('personal/', include('empleado.urls')),
     path('incidencias/', include('incidencia.urls')),
     path('nomina/', include('nomina.urls')),
+    path('horario/', include('horario.urls')),
     path('', include('novedades.urls')),
 ]

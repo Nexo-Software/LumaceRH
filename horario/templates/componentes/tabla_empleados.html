@@ -1,0 +1,22 @@
+<div class="table-responsive mt-4">
+    <table class="table table-hover table-striped table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Nombre Completo</th>
+                <th>Puesto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empleado in empleados %}
+            <tr>
+                <td>
+                    <a href="{% url 'empleado_detail' empleado.id %}" class="text-decoration-none">
+                        {{ empleado.postulante.usuario.get_full_name }}
+                    </a>
+                </td>
+                <td>{{ empleado.puesto.nombre }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
