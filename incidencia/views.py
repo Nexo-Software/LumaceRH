@@ -118,7 +118,7 @@ class IncidencasEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
     def get_queryset(self):
         empleado_id = self.kwargs.get('pk')
         empleado = get_object_or_404(EmpleadoModel, id=empleado_id)
-        return IncidenciasEmpleados.objects.filter(empleado=empleado)
+        return IncidenciasEmpleados.objects.filter(empleado=empleado).order_by('-fecha')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
