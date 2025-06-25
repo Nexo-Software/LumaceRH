@@ -109,3 +109,27 @@ class IncidenciasEmpleados(BaseModel):
         ]
     def __str__(self):
         return f"{self.empleado} - {self.tipo_incidencia} - {self.fecha}"
+
+# Configuración de la incidencia
+TIPO_ASISTENCIA = [
+    ('ASISTENCIA', 'Asistencia'),
+    ('FALTA', 'Falta'),
+    ('TARDANZA', 'Tardanza'),
+]
+class ConfiguracionIncidenciasModel(BaseModel):
+    """
+    Modelo para definir la configuración de las incidencias
+    """
+    incidencia = models.ForeignKey(TipoIncidenciasModel, on_delete=models.PROTECT, help_text="Tipo de Incidencia", verbose_name="Tipo de Incidencia")
+    tipo_asistencia = models.CharField(
+        max_length=10,
+        choices=TIPO_ASISTENCIA,
+        default='ASISTENCIA',
+        verbose_name="Tipo de Asistencia"
+    )
+    class Meta:
+        verbose_name = "Configuración de Incidencias"
+        verbose_name_plural = "Configuraciones de Incidencias"
+        db_table = "configuracion_incidencias"
+    def __str__(self):
+        return f"{self.incidencia} - {self.tipo_asistencia}"

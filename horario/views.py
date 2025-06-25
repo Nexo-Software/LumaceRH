@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from .models import ProgramacionDiariaModel, TurnosModel, SemanaModel, AsignacionEmpleadoModel
 from empleado.models import EmpleadoModel
 from sucursal.models import SucursalModel
+from incidencia.models import IncidenciasEmpleados, TipoIncidenciasModel
 from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import get_object_or_404

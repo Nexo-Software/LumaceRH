@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from empleado.models import EmpleadoModel
+from sucursal.models import SucursalModel
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -51,6 +52,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['empleado'] = empleado
         # Auditoria
         print(f'El usuario {self.request.user.get_full_name()} ha accedido al dashboard a las {timezone.now()}')
+        context['sucursales'] = SucursalModel.objects.all()
         return context
 
 class AppView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):

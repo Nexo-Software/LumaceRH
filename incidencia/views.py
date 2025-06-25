@@ -1,10 +1,11 @@
 # Vistas
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
 from django.views.generic.edit import UpdateView
+from django.utils import timezone
 # Mensajes
 from django.contrib import messages
 # Modelos
-from .models import IncidenciasEmpleados
+from .models import IncidenciasEmpleados, ConfiguracionIncidenciasModel
 from sucursal.models import SucursalModel
 from empleado.models import EmpleadoModel
 # Mixins
@@ -127,3 +128,62 @@ class IncidencasEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
         context = super().get_context_data(**kwargs)
         context['empleado'] = get_object_or_404(EmpleadoModel, id=self.kwargs['pk'])
         return context
+
+# Incidencias rapidas para horarios (incidencia a empleados)
+class RetardoIncidenciaView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    model = IncidenciasEmpleados
+    permission_required = 'incidencia.add_incidenciasempleados'
+    template_name = 'test.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        empleado = get_object_or_404(EmpleadoModel, id=self.kwargs['pk'])
+        # Buscar incidencia desde la configuracion de modelo
+        # Incidencia que tenga 'TARDANZA'
+        tardanza = ConfiguracionIncidenciasModel.objects.filter(tipo_asistencia='TARDANZA').first()
+        # Crear la incidencia al empleado
+        if tardanza:
+            incidencia = IncidenciasEmpleados.objects.create(
+                empleado=empleado,
+                tipo_incidencia=tardanza.incidencia,
+                fecha=  timezone.now(),
+                estado_incidencia='PENDIENTE',
+                observaciones='Retardo registrado automáticamente',
+                created_by = self.request.user,
+                updated_by = self.request.user
+            )
+            messages.success(self.request, f'Incidencia de retardo registrada para {empleado.postulante.usuario.get_full_name()} con éxito.')
+        else:
+            messages.error(self.request, 'No se encontró una configuración de incidencia para tardanzas.')
+        return context
+    # Redirigir a la lista de incidencias del empleado
+    #def get(self, request, *args, **kwargs):
+    #    return redirect(reverse('incidencias-empleado-view', kwargs={'pk': self.kwargs['pk']}))
+
+class FaltaIncidenciaView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    model = IncidenciasEmpleados
+    permission_required = 'incidencia.add_incidenciasempleados'
+    template_name = 'test.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        empleado = get_object_or_404(EmpleadoModel, id=self.kwargs['pk'])
+        # Buscar incidencia desde la configuracion de modelo
+        # Incidencia que tenga 'TARDANZA'
+        tardanza = ConfiguracionIncidenciasModel.objects.filter(tipo_asistencia='FALTA').first()
+        # Crear la incidencia al empleado
+        if tardanza:
+            incidencia = IncidenciasEmpleados.objects.create(
+                empleado=empleado,
+                tipo_incidencia=tardanza.incidencia,
+                fecha=  timezone.now(),
+                estado_incidencia='PENDIENTE',
+                observaciones='Falta registrada automáticamente',
+                created_by = self.request.user,
+                updated_by = self.request.user
+            )
+            messages.success(self.request, f'Incidencia de falta registrada para {empleado.postulante.usuario.get_full_name()} con éxito.')
+        else:
+            messages.error(self.request, 'No se encontró una configuración de incidencia para tardanzas.')
+        return context
+    # Redirigir a la lista de incidencias del empleado
+    #def get(self, request, *args, **kwargs):
+    #    return redirect(reverse('incidencias-empleado-view', kwargs={'pk': self.kwargs['pk']}))
