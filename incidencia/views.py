@@ -1,12 +1,14 @@
 # Vistas
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
 from django.views.generic.edit import UpdateView
-from pyexpat.errors import messages
-
+from django.utils import timezone
+# Mensajes
+from django.contrib import messages
 # Modelos
-from .models import IncidenciasEmpleados
+from .models import IncidenciasEmpleados, ConfiguracionIncidenciasModel
 from sucursal.models import SucursalModel
 from empleado.models import EmpleadoModel
+from horario.models import TurnosModel, SemanaModel, ProgramacionDiariaModel, AsignacionEmpleadoModel
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Shortcuts
@@ -14,6 +16,8 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 # Formularios
 from .forms import ObservacionesForm
+# Timezone
+from django.utils import timezone
 
 
 # Create your views here.
@@ -43,7 +47,10 @@ class EstadoIncdenciasGeneralUpdateView(LoginRequiredMixin, PermissionRequiredMi
     def post(self, request, *args, **kwargs):
         incidencias_ids = request.POST.getlist('lista_incidencias')
         accion = request.POST.get('accion')
-
+        # Valida que se haya seleccionado al menos una incidencia
+        if not incidencias_ids:
+            messages.error(request, 'Debe seleccionar al menos una incidencia.')
+            return redirect(request.META.get('HTTP_REFERER', reverse('dashboard')))
         # Obtener todas las incidencias en una sola consulta
         incidencias = IncidenciasEmpleados.objects.filter(id__in=incidencias_ids)
 
@@ -69,6 +76,7 @@ class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, Li
     template_name = 'incidencias_general.html'
     context_object_name = 'incidencias'
     paginate_by = 10
+
     def get_queryset(self):
         return IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')
 
@@ -110,11 +118,13 @@ class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     form_class = ObservacionesForm
     success_url = reverse_lazy('incidencias-general-list')  # regresar a la lista de incidencias generales
 
+
 class IncidencasEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = IncidenciasEmpleados
     permission_required = 'incidencia.view_incidenciasempleados'
     template_name = 'historial_incidencias.html'
     context_object_name = 'incidencias'
+
     def get_queryset(self):
         empleado_id = self.kwargs.get('pk')
         empleado = get_object_or_404(EmpleadoModel, id=empleado_id)
@@ -123,4 +133,84 @@ class IncidencasEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['empleado'] = get_object_or_404(EmpleadoModel, id=self.kwargs['pk'])
+        return context
+
+
+# Incidencias rapidas para horarios (incidencia a empleados)
+class RetardoIncidenciaView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    model = IncidenciasEmpleados
+    permission_required = 'incidencia.add_incidenciasempleados'
+    template_name = 'test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        empleado = get_object_or_404(EmpleadoModel, id=self.kwargs['pk'])
+        # Buscar incidencia desde la configuracion de modelo
+        # Incidencia que tenga 'TARDANZA'
+        tardanza = ConfiguracionIncidenciasModel.objects.filter(tipo_asistencia='TARDANZA').first()
+        # Crear la incidencia al empleado
+        if tardanza:
+            incidencia = IncidenciasEmpleados.objects.create(
+                empleado=empleado,
+                tipo_incidencia=tardanza.incidencia,
+                fecha=timezone.now(),
+                estado_incidencia='PENDIENTE',
+                observaciones='Retardo registrado automáticamente',
+                created_by=self.request.user,
+                updated_by=self.request.user
+            )
+            messages.success(self.request,
+                             f'Incidencia de retardo registrada para {empleado.postulante.usuario.get_full_name()} con éxito.')
+        else:
+            messages.error(self.request, 'No se encontró una configuración de incidencia para tardanzas.')
+        return context
+    # Redirigir a la lista de incidencias del empleado
+    # def get(self, request, *args, **kwargs):
+    #    return redirect(reverse('incidencias-empleado-view', kwargs={'pk': self.kwargs['pk']}))
+
+
+class FaltaIncidenciaView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    model = IncidenciasEmpleados
+    permission_required = 'incidencia.add_incidenciasempleados'
+    template_name = 'test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        empleado = get_object_or_404(EmpleadoModel, id=self.kwargs['pk'])
+        # Buscar incidencia desde la configuracion de modelo
+        # Incidencia que tenga 'TARDANZA'
+        tardanza = ConfiguracionIncidenciasModel.objects.filter(tipo_asistencia='FALTA').first()
+        # Crear la incidencia al empleado
+        if tardanza:
+            incidencia = IncidenciasEmpleados.objects.create(
+                empleado=empleado,
+                tipo_incidencia=tardanza.incidencia,
+                fecha=timezone.now(),
+                estado_incidencia='PENDIENTE',
+                observaciones='Falta registrada automáticamente',
+                created_by=self.request.user,
+                updated_by=self.request.user
+            )
+            # Eliminar al empleado de la programacion diaria
+            hora_actual = timezone.now().time()
+            # obtener el turno en el que estamos
+            turno_actual = TurnosModel.objects.filter(
+                hora_inicio__lte=hora_actual,
+                hora_fin__gte=hora_actual
+            ).first()
+            programacion_diaria = ProgramacionDiariaModel.objects.get(
+                dia=timezone.now().date(),  # Dia de hoy
+                turno=turno_actual
+            )
+            asignacion = AsignacionEmpleadoModel.objects.filter(
+                programacion=programacion_diaria,
+                empleado=empleado
+            ).first()
+            if asignacion:
+                print(f'Se encontró la asignación: {asignacion}')
+                asignacion.delete()
+            messages.success(self.request,
+                             f'Incidencia de falta registrada para {empleado.postulante.usuario.get_full_name()} con éxito.')
+        else:
+            messages.error(self.request, 'No se encontró una configuración de incidencia para tardanzas.')
         return context

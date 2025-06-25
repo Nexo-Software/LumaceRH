@@ -101,11 +101,6 @@ class AsignacionEmpleadoModel(BaseModel):
         related_name="asignaciones_horario",
         verbose_name="Empleado"
     )
-    observaciones = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Observaciones"
-    )
     
     class Meta:
         verbose_name = "Asignación de Empleado"

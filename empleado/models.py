@@ -37,7 +37,7 @@ class PostulanteModel(BaseModel):
     )
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Pendiente')
     def __str__(self):
-        return f"{self.usuario.username} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
+        return f"{self.usuario.get_full_name()} - {self.puesto.nombre} - {self.contrato.tipo_contrato}"
     class Meta:
         verbose_name = "Postulante"
         verbose_name_plural = "Postulantes"

@@ -36,13 +36,26 @@
         </div>
     </div>
     <!-- Ver empleados por sucursal (banner "ir a mi sucursal" -->
-    <div class="row mt-4">
-        <div class="col-12">
+    <div class="row mt-2 g-3">
+        <div class="col-md-6">
             <div class="card text-bg-secondary">
                 <div class="card-body text-center">
-                    <h2 class="card-title">Ver empleados por sucursal</h2>
+                    <h2 class="card-title">Empleados en {{ empleado.sucursal.nombre }}</h2>
                     <a href="{% url 'empleado_sucursal_list' %}" class="btn btn-light"><i class="fa-solid fa-store"></i>
                         Ir a mi sucursal</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card text-bg-secondary">
+                <div class="card-body text-center">
+                    <h2 class="card-title">
+                        Turno en {{ empleado.sucursal.nombre }} <span class="badge text-bg-danger">¡Nuevo!</span>
+                    </h2>
+                    <a href="{% url 'empleados_turnos_list' empleado.sucursal.id %}" class="btn btn-light">
+                        <i class="fa-solid fa-clock"></i> Ir a mi horario
+                    </a>
                 </div>
             </div>
         </div>

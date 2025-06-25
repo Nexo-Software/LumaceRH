@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block titulo%}
+    Empleados por Turno
+{% endblock %}
+
+{% block contenido %}
+    <h1 class="display-4">Turno <strong>{{ turno_actual.nombre }}</strong></h1>
+    <h2 class="display-6 fs-2">Empleados en <strong>{{ sucursal.nombre }}</strong></h2>
+    {% include 'componentes/tabla_empleados.html' with empleados=empleados %}
+{% endblock %}

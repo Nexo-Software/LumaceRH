@@ -1,10 +1,12 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from empleado.models import EmpleadoModel
+from sucursal.models import SucursalModel
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from django.utils import timezone
 from incidencia.models import IncidenciasEmpleados
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def get_logged_in_users():
@@ -45,8 +47,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['incidencias_count'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').count()
         context['incidencias'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')[:5]
         context['logged_in_users'] = usuarios.count()
+        # Obtener la sucursal del usuario autenticado
+        empleado = get_object_or_404(EmpleadoModel, postulante__usuario=self.request.user)
+        context['empleado'] = empleado
         # Auditoria
         print(f'El usuario {self.request.user.get_full_name()} ha accedido al dashboard a las {timezone.now()}')
+        context['sucursales'] = SucursalModel.objects.all()
         return context
 
 class AppView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):

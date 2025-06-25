@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django.utils.html import format_html
 # Modelos
-from .models import CategoriaIncidenciasModel, TipoIncidenciasModel, IncidenciasEmpleados
+from .models import CategoriaIncidenciasModel, TipoIncidenciasModel, IncidenciasEmpleados, ConfiguracionIncidenciasModel
 from import_export.admin import ImportExportModelAdmin
 
 @admin.register(CategoriaIncidenciasModel)
@@ -126,3 +126,7 @@ class IncidenciasEmpleadosAdmin(ImportExportModelAdmin):
     cambiar_incidencia.short_description = "Cambiar incidencias seleccionadas a pendiente"
     # Acciones personalizadas
     actions = ['aceptar_incidencia', 'rechazar_incidencia', 'cambiar_incidencia']
+
+@admin.register(ConfiguracionIncidenciasModel)
+class ConfiguracionAdmin(admin.ModelAdmin):
+    list_display = ('incidencia', 'tipo_asistencia',)
