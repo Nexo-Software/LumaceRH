@@ -47,6 +47,19 @@
                             {% endfor %}
                         </select>
                         <input type="date" class="form-control" name="fecha" required>
+                        <!-- Preguntar si cubrio un puesto diferente -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" name="dif_puesto">
+                            <label class="form-check-label" for="switchCheckDefault">¿Cubrio un puesto
+                                diferente?</label>
+                        </div>
+                        <!-- Preguntar que puesto cubrio -->
+                        <select class="form-select" aria-label="Default select example" name="tipo_contrato" required>
+                            <option selected>Seleecionar objetivo</option>
+                            {% for contrato in contratos %}
+                                <option value="{{ contrato.id }}">{{ contrato.nombre }}</option>
+                            {% endfor %}
+                        </select>
                         <textarea class="form-control" name="observaciones" placeholder="Observaciones"></textarea>
                         <button class="btn btn-primary" type="submit"><i class="fa-solid fa-arrow-up-from-bracket"></i>
                             Registrar
@@ -79,7 +92,8 @@
                                 <td>{{ incidencia.tipo_incidencia }}</td>
                                 <td>{{ incidencia.observaciones|default:"N/A" }}</td>
                                 <td class="">
-                                    <div class="d-flex gap-2 justify-content-center">  <!-- Contenedor flex con espacio entre elementos -->
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <!-- Contenedor flex con espacio entre elementos -->
                                         <form method="post"
                                               action="{% url 'estado-incidencia-update' incidencia.id %}"
                                               class="d-inline">
@@ -98,7 +112,9 @@
                                                 <i class="fa-solid fa-thumbs-down"></i>
                                             </button>
                                         </form>
-                                        <a href="{% url 'incidencia-update' incidencia.id %}" class="d-inline btn btn-outline-warning"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="{% url 'incidencia-update' incidencia.id %}"
+                                           class="d-inline btn btn-outline-warning"><i
+                                                class="fa-solid fa-pen-to-square"></i></a>
                                     </div>
                                 </td>
                             </tr>

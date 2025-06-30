@@ -13,6 +13,7 @@ from .forms import PostulanteInfoForm, PostulanteDireccionForm, PostulantePuesto
 from .models import PostulanteModel, EmpleadoModel
 from incidencia.models import IncidenciasEmpleados, TipoIncidenciasModel
 from django.contrib.auth.models import User
+from contrato.models import ContratoModel
 # Mixins
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Postgres
@@ -226,6 +227,8 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         context['incidencias'] = IncidenciasEmpleados.objects.filter(empleado=empleado, estado_incidencia='PENDIENTE').order_by('-fecha')
         # Obtener los tipos de incidencias
         context['tipos_incidencias'] = TipoIncidenciasModel.objects.all()
+        # Obtener contratos
+        context['contratos'] = ContratoModel.objects.filter(personalizado=False)
         return context
     def post(self, request, *args, **kwargs):
         # Recibir los datos del formulario
@@ -233,6 +236,9 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         tipo_incidencia_id = request.POST.get('tipo_incidencia')
         fecha = request.POST.get('fecha')
         observaciones = request.POST.get('observaciones')
+        tipo_contrato = request.POST.get('tipo_contrato')
+        dif_puesto = request.POST.get('dif_puesto', 'off') == 'on'  # Convertir a booleano
+        print(f'El tipo de contrato es: {tipo_contrato} y se la dedicion es : {dif_puesto}')
 
         # Guardar la incidencia
         try:
@@ -243,6 +249,8 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
                 tipo_incidencia=tipo_incidencia,
                 fecha=fecha,
                 observaciones=observaciones,
+                dif_puesto = dif_puesto,
+                contrato_obj = get_object_or_404(ContratoModel, id=tipo_contrato) if tipo_contrato else None,
                 created_by=self.request.user,
                 updated_by=self.request.user
             )

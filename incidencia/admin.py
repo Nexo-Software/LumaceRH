@@ -90,7 +90,7 @@ class IncidenciasEmpleadosAdmin(ImportExportModelAdmin):
     list_display = ('empleado', 'tipo_incidencia', 'fecha', 'get_estado_display', 'monto', 'created_at', 'updated_by',)
     list_filter = ('empleado__sucursal', 'tipo_incidencia', 'estado_incidencia',)
     date_hierarchy = 'fecha'
-    autocomplete_fields = ('empleado', 'tipo_incidencia', 'empleado_obj',)
+    autocomplete_fields = ('empleado', 'tipo_incidencia', 'contrato_obj',)
     search_fields = ('empleado__postulante__usuario__first_name', 'empleado__postulante__usuario__last_name', 'tipo_incidencia__nombre')
     readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by', 'monto')
     def save_model(self, request, obj, form, change):

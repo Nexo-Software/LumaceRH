@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block contenido %}
+<h1>{% if object %}Editar{% else %}Crear{% endif %} Programación Diaria</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <!-- Formulario principal -->
+    <div class="card mb-4">
+        <div class="card-header">Información de Programación</div>
+        <div class="card-body">
+            {% crispy form %}
+        </div>
+    </div>
+
+    <!-- Formset para asignaciones -->
+    <div class="card mb-4">
+        <div class="card-header">Asignación de Empleados</div>
+        <div class="card-body">
+            {{ formset.management_form }}
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Empleado</th>
+                        <th>¿Eliminar?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in formset %}
+                    <tr class="asignacion-form">
+                        <td>
+                            {{ form.id }}
+                            {{ form.empleado }}
+                            {% if form.empleado.errors %}
+                                <div class="text-danger">
+                                    {{ form.empleado.errors }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if form.DELETE %}
+                                {{ form.DELETE }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="d-flex justify-content-between">
+        <button type="submit" name="save" class="btn btn-primary">
+            Guardar
+        </button>
+
+        <!-- Botón para agregar más empleados -->
+        <button type="submit" name="add_more" class="btn btn-secondary">
+            + Agregar otro empleado
+        </button>
+    </div>
+</form>
+{% endblock %}

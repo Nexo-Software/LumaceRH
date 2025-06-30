@@ -15,7 +15,7 @@ class ContratoAdmin(ImportExportModelAdmin):
     search_fields = ('nombre', 'tipo_contrato')
     fieldsets = (
         ('Información del contrato', {
-            'fields': ('nombre', 'tipo_contrato', 'horas_trabajo', 'salario_base', 'fecha_inicio', 'fecha_fin')
+            'fields': ('nombre', 'tipo_contrato', 'horas_trabajo', 'salario_base', 'fecha_inicio', 'fecha_fin', 'personalizado'),
         }),
         ('Auditoria', {
             'fields': ('created_at', 'updated_at', 'created_by', 'updated_by', 'status'),

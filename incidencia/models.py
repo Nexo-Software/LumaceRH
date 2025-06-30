@@ -84,11 +84,11 @@ class IncidenciasEmpleados(BaseModel):
         verbose_name="Diferente puesto de trabajo",
         help_text="Indica si la incidencia es para un puesto diferente al habitual"
     )
-    empleado_obj = models.ForeignKey(
-        EmpleadoModel,
+    contrato_obj = models.ForeignKey(
+        ContratoModel,
         on_delete=models.CASCADE,
-        related_name="incidencias_empleado_obj",
-        verbose_name="Empleado Objetivo",
+        related_name="incidencias_contrato_obj",
+        verbose_name="Contrato Objetivo",
         blank=  True,
         null=True,
     ) # nos sirve para obtener su contrato (cuanto gana para ajustar la incidencia)

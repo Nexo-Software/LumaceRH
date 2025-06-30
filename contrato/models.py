@@ -20,6 +20,7 @@ class ContratoModel(BaseModel):
     # Datos de fecha
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_fin = models.DateField(null=True, blank=True)
+    personalizado = models.BooleanField(default=False, help_text='Indica si el contrato es personalizado', verbose_name='Contrato Personalizado', blank=True, null=True)
     
     class Meta:
         verbose_name = 'Contrato'

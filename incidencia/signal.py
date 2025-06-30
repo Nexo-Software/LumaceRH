@@ -6,8 +6,10 @@ from .models import IncidenciasEmpleados
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com")
+
 
 @receiver(post_save, sender=IncidenciasEmpleados)
 def update_postulante_status(sender, instance, created, **kwargs):
@@ -21,17 +23,41 @@ def update_postulante_status(sender, instance, created, **kwargs):
 
         user_prompt = f"""
         Datos de la incidencia:
-        - Tipo de incidencia: {instance.tipo_incidencia.nombre}
+        - Tipo: {instance.tipo_incidencia.nombre}
         - Categoría: {instance.tipo_incidencia.categoria.nombre}
-        - Descripción: {instance.tipo_incidencia.descripcion}
-        - Sueldo base del empleado: {instance.empleado.contrato.salario_base}
-        - Horas de trabajo por turno: {instance.empleado.contrato.horas_trabajo}
+        - Descripción: '{instance.tipo_incidencia.descripcion}'
+        - Sueldo base: {instance.empleado.contrato.salario_base}
+        - Horas por turno: {instance.empleado.contrato.horas_trabajo}
+        - Diferencia de puesto: {'SÍ' if instance.dif_puesto else 'NO'}
 
-        Instrucción:
-        Calcula el monto a pagar por esta incidencia de forma precisa. Usa el sueldo base y la descripción como referencia.
-        Solo responde con el número. No incluyas texto adicional, comas ni símbolos.
-        Si no puedes calcularlo, responde 0.
+        Instrucciones de cálculo:
+        1. SI hay diferencia de puesto ({'SÍ' if instance.dif_puesto else 'NO'}):
+           - Usar el monto del contrato diferente: {instance.contrato_obj.salario_base if instance.contrato_obj else 'N/A'}
+           - Resultado = Monto del contrato diferente (si está disponible)
+
+        2. SI NO hay diferencia de puesto:
+           - Calcular usando sueldo base y descripción:
+             * Si la descripción contiene "por hora" o "hora":
+                Valor hora = (Sueldo base / 30) / Horas por turno
+                Multiplicador = Buscar en descripción porcentaje (ej. '100%' → 1.0, '50%' → 0.5)
+                Cantidad = [FALTAN DATOS - devolver 0]
+                Resultado = Valor hora * Multiplicador * Cantidad → 0 (sin cantidad)
+
+             * Si la descripción contiene "sueldo base" o equivalente:
+                Buscar fracción en descripción (ej. "un sueldo base" → 1, "medio sueldo" → 0.5)
+                Resultado = Sueldo base * fracción
+
+             * Otros casos: 0
+
+        3. Reglas absolutas:
+           - Solo responder con número (sin formato, símbolos ni texto)
+           - Si falta dato esencial → 0
+           - Diferencia de puesto tiene prioridad
         """
+
+        # Ejemplo de implementación real sería:
+        #   if dif_puesto: return contrato_obj.salario_base
+        #   else: parsear descripción para calcular
 
         peticion = client.chat.completions.create(
             model="deepseek-chat",

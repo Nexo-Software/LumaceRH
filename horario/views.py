@@ -1,12 +1,14 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import ProgramacionDiariaModel, TurnosModel, SemanaModel, AsignacionEmpleadoModel
+from .forms import AsignacionEmpleadoFormSet
 from empleado.models import EmpleadoModel
 from sucursal.models import SucursalModel
 from incidencia.models import IncidenciasEmpleados, TipoIncidenciasModel
 from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 
 class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'horario.view_programaciondiariamodel'
@@ -63,3 +65,90 @@ class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListV
         ).first()
         context['turno_actual'] = turno_actual
         return context
+
+
+class ProgramacionDiariaCreateView(CreateView):
+    model = ProgramacionDiariaModel
+    form_class = AsignacionEmpleadoFormSet
+    template_name = 'crear_horario.html'
+    success_url = reverse_lazy('lista_programaciones')  # Ajusta con tu URL
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = AsignacionEmpleadoFormSet(self.request.POST, prefix='empleados')
+        else:
+            context['formset'] = AsignacionEmpleadoFormSet(prefix='empleados')
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+
+        if formset.is_valid():
+            # Asignar usuario creador
+            self.object = form.save(commit=False)
+            self.object.created_by = self.request.user
+            self.object.updated_by = self.request.user
+            self.object.save()
+
+            # Guardar formset
+            formset.instance = self.object
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.created_by = self.request.user
+                instance.updated_by = self.request.user
+                instance.save()
+
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+
+class ProgramacionDiariaUpdateView(UpdateView):
+    model = ProgramacionDiariaModel
+    form_class = AsignacionEmpleadoFormSet
+    template_name = 'crear_horario.html'
+    success_url = reverse_lazy('lista_programaciones')  # Ajusta con tu URL
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = AsignacionEmpleadoFormSet(
+                self.request.POST,
+                instance=self.object,
+                prefix='empleados'
+            )
+        else:
+            context['formset'] = AsignacionEmpleadoFormSet(
+                instance=self.object,
+                prefix='empleados'
+            )
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+
+        if formset.is_valid():
+            # Asignar usuario actualizador
+            self.object = form.save(commit=False)
+            self.object.updated_by = self.request.user
+            self.object.save()
+
+            # Guardar formset
+            instances = formset.save(commit=False)
+            for instance in instances:
+                # Solo para nuevas instancias
+                if not instance.pk:
+                    instance.created_by = self.request.user
+                instance.updated_by = self.request.user
+                instance.save()
+
+            # Eliminar marcados para borrar
+            for obj in formset.deleted_objects:
+                obj.delete()
+
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
