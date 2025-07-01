@@ -237,6 +237,8 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         fecha = request.POST.get('fecha')
         observaciones = request.POST.get('observaciones')
         tipo_contrato = request.POST.get('tipo_contrato')
+        if tipo_contrato == '0':
+            tipo_contrato = None
         dif_puesto = request.POST.get('dif_puesto', 'off') == 'on'  # Convertir a booleano
         print(f'El tipo de contrato es: {tipo_contrato} y se la dedicion es : {dif_puesto}')
 

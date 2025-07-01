@@ -55,7 +55,7 @@
                         </div>
                         <!-- Preguntar que puesto cubrio -->
                         <select class="form-select" aria-label="Default select example" name="tipo_contrato" required>
-                            <option selected>Seleecionar objetivo</option>
+                            <option selected value="0">Seleecionar objetivo</option>
                             {% for contrato in contratos %}
                                 <option value="{{ contrato.id }}">{{ contrato.nombre }}</option>
                             {% endfor %}

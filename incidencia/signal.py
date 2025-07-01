@@ -20,50 +20,51 @@ def update_postulante_status(sender, instance, created, **kwargs):
         print("La incidencia ha sido creada con éxito.")
     elif instance.estado_incidencia == 'APROBADA':
         print("La incidencia ha sido aprobada.")
+        salario_contrario = float(instance.contrato_obj.salario_base) if instance.contrato_obj else 0
+        salario_base = float(instance.empleado.contrato.salario_base) if instance.empleado.contrato else 0
 
+        # Asegurar que la diferencia no sea negativa
+        dif = max(0, salario_contrario - salario_base)
+
+        print(f'El salario base es: {salario_base}')
+        print(f'El salario del contrato contrario es: {salario_contrario}')
+        print(f'La diferencia de puesto es: {dif}')
+
+        # Mejorar el prompt con ejemplos concretos de cálculo
         user_prompt = f"""
-        Datos de la incidencia:
-        - Tipo: {instance.tipo_incidencia.nombre}
-        - Categoría: {instance.tipo_incidencia.categoria.nombre}
-        - Descripción: '{instance.tipo_incidencia.descripcion}'
-        - Sueldo base: {instance.empleado.contrato.salario_base}
-        - Horas por turno: {instance.empleado.contrato.horas_trabajo}
-        - Diferencia de puesto: {'SÍ' if instance.dif_puesto else 'NO'}
+            Rol: Eres un experto en nóminas mexicano especializado en cálculos de incidencias.
+            Datos:
+            - Tipo: {instance.tipo_incidencia.nombre}
+            - Categoría: {instance.tipo_incidencia.categoria.nombre}
+            - Descripción: "{instance.tipo_incidencia.descripcion}"
+            - Salario base: ${salario_base:.2f} MXN
+            - Horas por turno: {instance.empleado.contrato.horas_trabajo}
+            - Diferencia de puesto: {'Sí' if instance.dif_puesto else 'No'} {f'(Valor: ${dif:.2f} MXN)' if instance.dif_puesto else ''}
 
-        Instrucciones de cálculo:
-        1. SI hay diferencia de puesto ({'SÍ' if instance.dif_puesto else 'NO'}):
-           - Usar el monto del contrato diferente: {instance.contrato_obj.salario_base if instance.contrato_obj else 'N/A'}
-           - Resultado = Monto del contrato diferente (si está disponible)
+            Instrucciones:
+            1. Si la descripción menciona "horas extras":
+               - Calcula: (Salario base / 30 / 8) * Horas extras * 2
+            2. Si menciona "día festivo":
+               - Calcula: (Salario base / 30) * 3
+            3. Si menciona "diferencia de puesto":
+               - Añade el valor completo de ${dif:.2f} MXN
+            4. Si no hay lógica clara o faltan datos, devuelve 0
 
-        2. SI NO hay diferencia de puesto:
-           - Calcular usando sueldo base y descripción:
-             * Si la descripción contiene "por hora" o "hora":
-                Valor hora = (Sueldo base / 30) / Horas por turno
-                Multiplicador = Buscar en descripción porcentaje (ej. '100%' → 1.0, '50%' → 0.5)
-                Cantidad = [FALTAN DATOS - devolver 0]
-                Resultado = Valor hora * Multiplicador * Cantidad → 0 (sin cantidad)
+            Ejemplos:
+            - Descripción: "Pago por 3 horas extras": ({salario_base}/30/8)*3*2
+            - Descripción: "Bono por puesto superior": {dif} (si aplica)
 
-             * Si la descripción contiene "sueldo base" o equivalente:
-                Buscar fracción en descripción (ej. "un sueldo base" → 1, "medio sueldo" → 0.5)
-                Resultado = Sueldo base * fracción
-
-             * Otros casos: 0
-
-        3. Reglas absolutas:
-           - Solo responder con número (sin formato, símbolos ni texto)
-           - Si falta dato esencial → 0
-           - Diferencia de puesto tiene prioridad
-        """
-
-        # Ejemplo de implementación real sería:
-        #   if dif_puesto: return contrato_obj.salario_base
-        #   else: parsear descripción para calcular
+            Formato requerido:
+            - SOLO EL NÚMERO (sin símbolos, texto o comas)
+            - Máximo 2 decimales
+            - 0 si no es calculable
+            """
 
         peticion = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
                 {"role": "system",
-                 "content": "Eres un asistente de RRHH profesional en México (Veracruz) que ayuda a calcular el monto exacto a pagar por una incidencia. Solo responde el número."},
+                 "content": "Eres un calculador de nóminas preciso. Solo devuelve el valor numérico."},
                 {"role": "user", "content": user_prompt},
             ],
             stream=False
@@ -72,16 +73,23 @@ def update_postulante_status(sender, instance, created, **kwargs):
         respuesta = peticion.choices[0].message.content
 
         try:
-            respuesta = float(respuesta.replace("$", "").replace(",", "").strip())
-            if respuesta < 0 or respuesta > instance.empleado.contrato.salario_base * 2:
-                raise ValueError("Monto fuera de rango.")
-        except Exception as e:
-            print("Error al procesar la respuesta de la IA:", e)
-            respuesta = 0
+            # Limpieza robusta de la respuesta
+            respuesta_limpia = respuesta.replace("$", "").replace(",", "").replace("MXN", "").strip()
+            monto = float(respuesta_limpia)
 
-        print(respuesta)
-        print(type(respuesta))
-        IncidenciasEmpleados.objects.filter(pk=instance.pk).update(monto=respuesta)
+            # Validación más flexible
+            salario_mensual = instance.empleado.contrato.salario_base
+            if monto < 0:
+                raise ValueError("Monto negativo no permitido")
+            if monto > salario_mensual * 5:  # Ampliar rango a 5x el salario
+                print(f"Advertencia: Monto elevado pero aceptado: {monto} (Límite anterior: {salario_mensual * 2})")
+
+        except Exception as e:
+            print(f"Error en cálculo: {e} | Respuesta original: {respuesta}")
+            monto = 0
+
+        print(f"Monto calculado: {monto} ({type(monto)})")
+        IncidenciasEmpleados.objects.filter(pk=instance.pk).update(monto=monto)
     elif instance.estado_incidencia == 'RECHAZADA':
         print("La incidencia ha sido rechazada.")
     else:
