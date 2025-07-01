@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from empleado.models import EmpleadoModel
+from empleado.models import EmpleadoModel, PostulanteModel
 from sucursal.models import SucursalModel
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User

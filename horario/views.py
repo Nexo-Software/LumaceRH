@@ -1,6 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import ProgramacionDiariaModel, TurnosModel, SemanaModel, AsignacionEmpleadoModel
+from empleado.models import PostulanteModel, EmpleadoModel
 from .forms import AsignacionEmpleadoFormSet
 from empleado.models import EmpleadoModel
 from sucursal.models import SucursalModel
@@ -9,6 +10,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+
 
 class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'horario.view_programaciondiariamodel'
@@ -19,16 +21,16 @@ class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListV
     def get_queryset(self):
         # Obtener el turno actual con base a la hora actual
         mi_hora = timezone.now().strftime('%H:%M')
+        sucursal = get_object_or_404(SucursalModel, pk=self.kwargs['pk'])
         try:
             turno_actual = TurnosModel.objects.get(
                 hora_inicio__lte=mi_hora,
-                hora_fin__gte=mi_hora
+                hora_fin__gte=mi_hora,
+                sucursal = sucursal
             )
         except TurnosModel.DoesNotExist:
             messages.error(self.request, f'No hay turnos programados para la hora actual. ({mi_hora})')
             return ProgramacionDiariaModel.objects.none()
-        # Obtener la sucursal con el pk
-        sucursal = get_object_or_404(SucursalModel, pk=self.kwargs['pk'])
         # Obtener el ultimo registro de la semana de la sucursal
         semana_actual = SemanaModel.objects.filter(
             sucursal=sucursal
@@ -37,11 +39,15 @@ class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListV
             messages.error(self.request, "No hay semanas programadas para la sucursal seleccionada.")
             return ProgramacionDiariaModel.objects.none()
         dia_actual = timezone.now().date()
-        dia_programado = ProgramacionDiariaModel.objects.get(
-            semana=semana_actual,
-            dia=dia_actual,
-            turno=turno_actual,
-        )
+        try:
+            dia_programado = ProgramacionDiariaModel.objects.get(
+                semana=semana_actual,
+                dia=dia_actual,
+                turno=turno_actual,
+            )
+        except ProgramacionDiariaModel.DoesNotExist:
+            messages.error(self.request, f"No hay programación para el día {dia_actual} en el turno actual.")
+            return ProgramacionDiariaModel.objects.none()
         # Obtener los empleados del dia_programado
         empleados = AsignacionEmpleadoModel.objects.filter(
             programacion=dia_programado
@@ -52,6 +58,7 @@ class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListV
             messages.warning(self.request, "No hay empleados asignados para el turno actual.")
             return ProgramacionDiariaModel.objects.none()
         return find_empleados
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         # Obtener la sucursal con el pk
@@ -61,8 +68,10 @@ class EmpleadosTurnosListView(LoginRequiredMixin, PermissionRequiredMixin, ListV
         mi_hora = timezone.now().strftime('%H:%M')
         turno_actual = TurnosModel.objects.filter(
             hora_inicio__lte=mi_hora,
-            hora_fin__gte=mi_hora
+            hora_fin__gte=mi_hora,
+            sucursal = sucursal
         ).first()
+        print(f'El turno actual es: {turno_actual}')
         context['turno_actual'] = turno_actual
         return context
 
