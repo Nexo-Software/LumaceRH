@@ -78,7 +78,7 @@ class IncidenciasGeneralListView(LoginRequiredMixin, PermissionRequiredMixin, Li
     paginate_by = 10
 
     def get_queryset(self):
-        return IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')
+        return IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -116,7 +116,17 @@ class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     template_name = 'editar_incidencia.html'
     permission_required = 'incidencia.editar_incidencias'
     form_class = ObservacionesForm
-    success_url = reverse_lazy('incidencias-general-list')  # regresar a la lista de incidencias generales
+    def get_success_url(self):
+        # Redirigir a la lista de incidencias del empleado
+        # Obtener la url anterior
+        if 'next' in self.request.POST:
+            return self.request.POST.get('next')
+        # Si no hay next, redirigir a la vista de detalle del empleado
+        if self.object.empleado:
+            # Si la incidencia tiene un empleado asociado, redirigir a su detalle
+            return reverse('empleado_detail', kwargs={'pk': self.object.empleado.id})
+        # Si no hay empleado asociado, redirigir al dashboard
+        return reverse('dashboard')
 
 
 class IncidencasEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
