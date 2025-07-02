@@ -118,15 +118,7 @@ class IncidenciaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     form_class = ObservacionesForm
     def get_success_url(self):
         # Redirigir a la lista de incidencias del empleado
-        # Obtener la url anterior
-        if 'next' in self.request.POST:
-            return self.request.POST.get('next')
-        # Si no hay next, redirigir a la vista de detalle del empleado
-        if self.object.empleado:
-            # Si la incidencia tiene un empleado asociado, redirigir a su detalle
-            return reverse('empleado_detail', kwargs={'pk': self.object.empleado.id})
-        # Si no hay empleado asociado, redirigir al dashboard
-        return reverse('dashboard')
+        return reverse('empleado_detail', kwargs={'pk': self.object.empleado.id})
 
 
 class IncidencasEmpleadoView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
