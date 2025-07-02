@@ -246,6 +246,7 @@ class EmpleadoDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         try:
             empleado = self.get_object()
             tipo_incidencia = get_object_or_404(TipoIncidenciasModel, id=tipo_incidencia_id)
+            observaciones = observaciones if observaciones else get_object_or_404(ContratoModel, id=tipo_contrato).nombre if tipo_contrato else None # Manejar caso de observaciones vacías
             incidencia = IncidenciasEmpleados.objects.create(
                 empleado=empleado,
                 tipo_incidencia=tipo_incidencia,
