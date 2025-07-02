@@ -1,5 +1,6 @@
 from allauth.account.views import SignupView, LoginView
 from .forms import CustomSignupForm, CustomLoginForm
+from django.contrib import messages
 # Create your views here.
 
 class MyCustomSignupView(SignupView):
