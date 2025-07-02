@@ -45,7 +45,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['empleados_count'] = EmpleadoModel.objects.count()
         context['incidencias_count'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').count()
-        context['incidencias'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-fecha')[:5]
+        context['incidencias'] = IncidenciasEmpleados.objects.filter(estado_incidencia='PENDIENTE').order_by('-created_at')[:5]
         context['logged_in_users'] = usuarios.count()
         # Obtener la sucursal del usuario autenticado
         empleado = get_object_or_404(EmpleadoModel, postulante__usuario=self.request.user)
